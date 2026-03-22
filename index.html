@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="theme-color" content="#2563eb"/>
+<link rel="manifest" href="/manifest.json"/>
+<title>CQP IF — Quiz Anamnèse</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f172a;--surface:#1e293b;--surface2:#2d3f55;--border:#334155;
+  --blue:#2563eb;--blue-light:#3b82f6;--blue-dim:#1e3a8a;
+  --green:#16a34a;--green-light:#22c55e;--green-dim:#14532d;
+  --red:#dc2626;--red-light:#ef4444;--red-dim:#7f1d1d;
+  --orange:#ea580c;--text:#f1f5f9;--muted:#94a3b8;--small:#64748b;
+  --radius:12px;--radius-sm:8px;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:2rem}
+
+/* ── HEADER ── */
+.header{background:linear-gradient(135deg,#1e3a5f,var(--blue-dim));padding:1rem 1.25rem;display:flex;align-items:center;gap:.75rem;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+.header-icon{width:36px;height:36px;background:var(--blue);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.header-title{font-size:.95rem;font-weight:700;color:var(--text)}
+.header-sub{font-size:.7rem;color:var(--muted)}
+.header-score{margin-left:auto;text-align:right}
+.score-val{font-size:1.1rem;font-weight:700;color:var(--blue-light)}
+.score-label{font-size:.65rem;color:var(--muted)}
+
+/* ── SCREENS ── */
+.screen{display:none;padding:1rem;max-width:640px;margin:0 auto;animation:fadeIn .25s ease}
+.screen.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ── HOME ── */
+.home-hero{background:linear-gradient(135deg,var(--blue-dim),#1e3a5f);border-radius:var(--radius);padding:1.5rem;margin-bottom:1rem;text-align:center}
+.home-hero h1{font-size:1.4rem;font-weight:800;margin-bottom:.3rem}
+.home-hero p{font-size:.8rem;color:var(--muted)}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin-bottom:1rem}
+.stat-card{background:var(--surface);border-radius:var(--radius-sm);padding:.75rem;text-align:center;border:1px solid var(--border)}
+.stat-num{font-size:1.4rem;font-weight:800;color:var(--blue-light)}
+.stat-label{font-size:.65rem;color:var(--muted);margin-top:.2rem}
+.btn{width:100%;padding:.875rem;border-radius:var(--radius-sm);border:none;font-size:.95rem;font-weight:700;cursor:pointer;transition:.2s}
+.btn-primary{background:var(--blue);color:#fff}
+.btn-primary:hover{background:var(--blue-light)}
+.btn-secondary{background:var(--surface2);color:var(--text);border:1px solid var(--border);margin-top:.5rem}
+.btn-secondary:hover{background:var(--border)}
+
+/* ── MODE SELECT ── */
+.mode-grid{display:grid;gap:.75rem;margin-bottom:1rem}
+.mode-card{background:var(--surface);border:2px solid var(--border);border-radius:var(--radius);padding:1rem;cursor:pointer;transition:.2s}
+.mode-card:hover{border-color:var(--blue);background:var(--surface2)}
+.mode-card.selected{border-color:var(--blue);background:var(--blue-dim)}
+.mode-title{font-weight:700;font-size:.9rem;margin-bottom:.3rem;display:flex;align-items:center;gap:.5rem}
+.mode-desc{font-size:.75rem;color:var(--muted)}
+
+/* ── QUIZ ── */
+.progress-bar{height:4px;background:var(--border);border-radius:2px;margin-bottom:1rem;overflow:hidden}
+.progress-fill{height:100%;background:var(--blue);transition:width .4s ease;border-radius:2px}
+.q-counter{font-size:.75rem;color:var(--muted);margin-bottom:.75rem;display:flex;justify-content:space-between}
+.profil-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;margin-bottom:1rem}
+.profil-header{display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem}
+.profil-avatar{width:40px;height:40px;border-radius:50%;background:var(--blue-dim);display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:800;color:var(--blue-light);flex-shrink:0}
+.profil-name{font-weight:700;font-size:1rem}
+.profil-meta{font-size:.7rem;color:var(--muted)}
+.profil-tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.5rem}
+.tag{font-size:.65rem;padding:.2rem .5rem;border-radius:20px;font-weight:600}
+.tag-blue{background:var(--blue-dim);color:var(--blue-light)}
+.tag-orange{background:#431407;color:#fb923c}
+.tag-green{background:var(--green-dim);color:var(--green-light)}
+.tag-red{background:var(--red-dim);color:#fca5a5}
+.profil-context{font-size:.78rem;color:var(--muted);line-height:1.5;border-top:1px solid var(--border);padding-top:.6rem;margin-top:.4rem}
+.question-text{font-size:.9rem;font-weight:600;line-height:1.5;margin-bottom:.875rem;color:var(--text)}
+.options{display:flex;flex-direction:column;gap:.5rem;margin-bottom:1rem}
+.option{background:var(--surface);border:2px solid var(--border);border-radius:var(--radius-sm);padding:.75rem 1rem;cursor:pointer;font-size:.82rem;line-height:1.4;transition:.15s;text-align:left;color:var(--text);display:flex;gap:.6rem;align-items:flex-start}
+.option:hover:not(:disabled){border-color:var(--blue);background:var(--surface2)}
+.option.correct{border-color:var(--green);background:var(--green-dim);color:#bbf7d0}
+.option.wrong{border-color:var(--red);background:var(--red-dim);color:#fecaca}
+.option.reveal-correct{border-color:var(--green);background:var(--green-dim);color:#bbf7d0}
+.option:disabled{cursor:default}
+.opt-letter{width:22px;height:22px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;flex-shrink:0;margin-top:.1rem}
+.option.correct .opt-letter{background:var(--green);color:#fff}
+.option.wrong .opt-letter{background:var(--red);color:#fff}
+.option.reveal-correct .opt-letter{background:var(--green);color:#fff}
+.explanation{background:var(--surface2);border-left:3px solid var(--blue);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:.75rem 1rem;font-size:.78rem;line-height:1.5;color:var(--muted);margin-bottom:1rem;display:none}
+.explanation.visible{display:block;animation:fadeIn .2s}
+.explanation strong{color:var(--text)}
+.btn-next{background:var(--blue);color:#fff;padding:.75rem;border-radius:var(--radius-sm);border:none;font-size:.9rem;font-weight:700;cursor:pointer;width:100%;display:none;margin-top:.25rem}
+.btn-next.visible{display:block;animation:fadeIn .2s}
+
+/* ── RESULTS ── */
+.result-hero{background:var(--surface);border-radius:var(--radius);padding:1.5rem;text-align:center;margin-bottom:1rem;border:1px solid var(--border)}
+.result-score{font-size:3rem;font-weight:800;margin:.5rem 0}
+.result-total{font-size:.85rem;color:var(--muted)}
+.result-msg{font-size:.9rem;margin-top:.5rem}
+.score-green{color:var(--green-light)}
+.score-orange{color:#fb923c}
+.score-red{color:var(--red-light)}
+.review-list{display:flex;flex-direction:column;gap:.5rem;margin-bottom:1rem}
+.review-item{background:var(--surface);border-radius:var(--radius-sm);padding:.75rem;border-left:3px solid}
+.review-item.ok{border-color:var(--green)}
+.review-item.ko{border-color:var(--red)}
+.review-profil{font-size:.7rem;color:var(--muted);margin-bottom:.2rem}
+.review-q{font-size:.78rem;font-weight:600;margin-bottom:.3rem}
+.review-answer{font-size:.72rem}
+.review-answer.ok{color:var(--green-light)}
+.review-answer.ko{color:#fca5a5}
+.review-correct{font-size:.72rem;color:var(--green-light);margin-top:.2rem}
+
+/* ── RESPONSIVE ── */
+@media(max-width:380px){
+  .header-title{font-size:.85rem}
+  .stat-num{font-size:1.2rem}
+  .question-text{font-size:.85rem}
+  .option{font-size:.78rem}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-icon">🏋️</div>
+  <div>
+    <div class="header-title">CQP IF — Anamnèse</div>
+    <div class="header-sub">Épreuve 2 · Personal Training</div>
+  </div>
+  <div class="header-score" id="headerScore" style="display:none">
+    <div class="score-val" id="headerScoreVal">0/0</div>
+    <div class="score-label">score</div>
+  </div>
+</div>
+
+<!-- HOME -->
+<div class="screen active" id="screenHome">
+  <div class="home-hero">
+    <h1>Quiz Anamnèse</h1>
+    <p>Maîtrise les questions clés pour chaque profil client</p>
+  </div>
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-num">12</div><div class="stat-label">Profils</div></div>
+    <div class="stat-card"><div class="stat-num" id="statQuestions">36</div><div class="stat-label">Questions</div></div>
+    <div class="stat-card"><div class="stat-num" id="statBest">—</div><div class="stat-label">Meilleur</div></div>
+  </div>
+  <button class="btn btn-primary" onclick="showModeScreen()">Commencer le quiz</button>
+  <button class="btn btn-secondary" onclick="showReview()">Réviser tous les profils</button>
+</div>
+
+<!-- MODE -->
+<div class="screen" id="screenMode">
+  <div style="margin-bottom:1rem">
+    <div style="font-weight:700;font-size:1rem;margin-bottom:.25rem">Mode de quiz</div>
+    <div style="font-size:.78rem;color:var(--muted)">Choisis comment tu veux t'entraîner</div>
+  </div>
+  <div class="mode-grid">
+    <div class="mode-card selected" onclick="selectMode(this,'all')" data-mode="all">
+      <div class="mode-title">🔀 Tous les profils</div>
+      <div class="mode-desc">36 questions mélangées — tous les 12 profils</div>
+    </div>
+    <div class="mode-card" onclick="selectMode(this,'random10')" data-mode="random10">
+      <div class="mode-title">⚡ Session rapide</div>
+      <div class="mode-desc">10 questions aléatoires — 5 min chrono</div>
+    </div>
+    <div class="mode-card" onclick="selectMode(this,'errors')" data-mode="errors">
+      <div class="mode-title">❌ Mes erreurs</div>
+      <div class="mode-desc">Reprendre uniquement les questions ratées</div>
+    </div>
+  </div>
+  <button class="btn btn-primary" onclick="startQuiz()">Lancer</button>
+  <button class="btn btn-secondary" onclick="showScreen('screenHome')">Retour</button>
+</div>
+
+<!-- QUIZ -->
+<div class="screen" id="screenQuiz">
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="q-counter">
+    <span id="qCounter">Question 1 / 36</span>
+    <span id="qStreak"></span>
+  </div>
+  <div class="profil-card" id="profilCard"></div>
+  <div class="question-text" id="questionText"></div>
+  <div class="options" id="optionsContainer"></div>
+  <div class="explanation" id="explanation"></div>
+  <button class="btn-next" id="btnNext" onclick="nextQuestion()">Suivant →</button>
+</div>
+
+<!-- RESULTS -->
+<div class="screen" id="screenResults">
+  <div class="result-hero">
+    <div style="font-size:1.1rem;font-weight:700">Quiz terminé 💪</div>
+    <div class="result-score" id="resultScore"></div>
+    <div class="result-total" id="resultTotal"></div>
+    <div class="result-msg" id="resultMsg"></div>
+  </div>
+  <div style="font-weight:700;font-size:.85rem;color:var(--muted);margin-bottom:.5rem">Détail par question</div>
+  <div class="review-list" id="reviewList"></div>
+  <button class="btn btn-primary" onclick="showModeScreen()">Rejouer</button>
+  <button class="btn btn-secondary" onclick="showScreen('screenHome')">Accueil</button>
+</div>
+
+<!-- REVIEW (fiches profils) -->
+<div class="screen" id="screenReview">
+  <div style="font-weight:700;font-size:1rem;margin-bottom:.75rem">📋 Tous les profils</div>
+  <div id="reviewProfilsList"></div>
+  <button class="btn btn-secondary" onclick="showScreen('screenHome')">Retour</button>
+</div>
+
+<script>
+// ─── DONNÉES ───────────────────────────────────────────────────────────────
+const QUESTIONS = [
+  // ── SIMONE n°1 ──
+  {
+    id:1, profil:"Simone", num:1, sexe:"F", age:63, poids:75, taille:155,
+    profession:"Secrétaire de direction",
+    objectif:"Récupérer du souffle, se sentir bien, mieux dormir",
+    contexte:"En retraite dans 6 mois. Surpoids depuis longtemps. Veut accompagner son mari en randonnée mais est trop essoufflée. 1 séance/semaine le jeudi soir.",
+    tags:["Senior","Sédentaire","Cardio","Surpoids"],
+    tagTypes:["blue","orange","green","orange"],
+    question:"Quelle est la question d'anamnèse PRIORITAIRE pour Simone ?",
+    options:[
+      "Quel est votre objectif de poids précis dans 6 mois ?",
+      "Avez-vous un suivi médical ? (hypertension, diabète, problèmes cardiaques ?)",
+      "Avez-vous déjà pratiqué la musculation ou le fitness ?",
+      "Combien de fois par semaine marchez-vous ?"
+    ],
+    correct:1,
+    explanation:"À 63 ans avec surpoids marqué et essoufflement important, le risque cardiovasculaire est la priorité absolue avant toute mise en charge. Hypertension et diabète de type 2 sont fréquents dans ce profil et peuvent contre-indiquer certains efforts ou modifier la prescription."
+  },
+  {
+    id:2, profil:"Simone", num:1, sexe:"F", age:63, poids:75, taille:155,
+    profession:"Secrétaire de direction",
+    objectif:"Récupérer du souffle, se sentir bien, mieux dormir",
+    contexte:"En retraite dans 6 mois. Surpoids depuis longtemps. Veut accompagner son mari en randonnée mais est trop essoufflée. 1 séance/semaine le jeudi soir.",
+    tags:["Senior","Sédentaire","Cardio","Surpoids"],
+    tagTypes:["blue","orange","green","orange"],
+    question:"Sur ton circuit, quelle adaptation est INDISPENSABLE pour Simone dès la 1ère séance ?",
+    options:[
+      "Augmenter le nombre de répétitions pour améliorer l'endurance",
+      "Remplacer le push-up classique par une version sur les genoux ou mains sur banc",
+      "Utiliser des charges maximales pour progresser rapidement",
+      "Supprimer le RDL car trop dangereux pour une senior"
+    ],
+    correct:1,
+    explanation:"Simone est débutante et senior. Le push-up classique exige une force de bras et un gainage qu'elle ne possède probablement pas encore. La version régressive (genoux ou mains surélevées) permet de travailler le même pattern en toute sécurité et de la valoriser dès la 1ère séance."
+  },
+  {
+    id:3, profil:"Simone", num:1, sexe:"F", age:63, poids:75, taille:155,
+    profession:"Secrétaire de direction",
+    objectif:"Récupérer du souffle, se sentir bien, mieux dormir",
+    contexte:"En retraite dans 6 mois. Surpoids depuis longtemps. Veut accompagner son mari en randonnée mais est trop essoufflée. 1 séance/semaine le jeudi soir.",
+    tags:["Senior","Sédentaire","Cardio","Surpoids"],
+    tagTypes:["blue","orange","green","orange"],
+    question:"Quel ton pédagogique adopter avec Simone ?",
+    options:[
+      "Challenge et objectifs chiffrés pour la motiver à progresser rapidement",
+      "Bienveillant et rassurant, parler en termes de qualité de vie et d'énergie",
+      "Technique et précis, lui expliquer les filières énergétiques",
+      "Distant et professionnel pour maintenir une relation coach-client formelle"
+    ],
+    correct:1,
+    explanation:"Simone est une senior qui reprend l'activité pour sa qualité de vie. Un ton challenge risque de l'intimider. Le vocabulaire doit être ancré dans sa réalité quotidienne ('vous aurez plus d'énergie pour vos randonnées') et éviter les termes liés au poids ou au régime."
+  },
+
+  // ── JEAN n°2 ──
+  {
+    id:4, profil:"Jean", num:2, sexe:"H", age:51, poids:65, taille:180,
+    profession:"Ingénieur agronome",
+    objectif:"Augmenter sa masse musculaire",
+    contexte:"Sédentaire, travail bureau et déplacements. Douleurs dorsales récurrentes. S'est blessé à l'épaule droite en faisant du développé couché seul. Ne maîtrise pas la technique des squats. 1 séance/semaine le samedi matin.",
+    tags:["Bureau","Épaule","Dos","Débutant tech."],
+    tagTypes:["blue","red","red","orange"],
+    question:"Jean s'est blessé à l'épaule droite sur développé couché. Quelle est la question d'anamnèse clé concernant cette blessure ?",
+    options:[
+      "Combien de kilos faisiez-vous au développé couché ?",
+      "L'épaule est-elle douloureuse au quotidien ? Y a-t-il des mouvements interdits par un médecin/kiné ?",
+      "Pourquoi vous entraîniez-vous seul sans coach ?",
+      "Avez-vous arrêté complètement le développé couché depuis ?"
+    ],
+    correct:1,
+    explanation:"Avant tout, il faut savoir si la blessure est résolue ou active, et si un professionnel de santé a donné des restrictions précises. Prescrire un exercice de poussé sans cette information expose à une récidive et engage ta responsabilité en tant que coach."
+  },
+  {
+    id:5, profil:"Jean", num:2, sexe:"H", age:51, poids:65, taille:180,
+    profession:"Ingénieur agronome",
+    objectif:"Augmenter sa masse musculaire",
+    contexte:"Sédentaire, travail bureau et déplacements. Douleurs dorsales récurrentes. S'est blessé à l'épaule droite en faisant du développé couché seul. Ne maîtrise pas la technique des squats. 1 séance/semaine le samedi matin.",
+    tags:["Bureau","Épaule","Dos","Débutant tech."],
+    tagTypes:["blue","red","red","orange"],
+    question:"Jean veut de la masse musculaire mais ne maîtrise pas le squat. Quelle est la bonne approche sur ton circuit ?",
+    options:[
+      "Utiliser le squat barre classique pour maximiser l'hypertrophie",
+      "Commencer par le goblet squat léger pour enseigner le pattern avant tout",
+      "Supprimer le squat du circuit pour éviter les risques",
+      "Faire des leg press à la machine uniquement"
+    ],
+    correct:1,
+    explanation:"Le goblet squat est l'exercice d'apprentissage du squat par excellence. La KB devant le corps force la verticalité du tronc et place automatiquement le centre de gravité au bon endroit. Jean apprend le pattern en sécurité avant de progresser vers des charges plus importantes."
+  },
+  {
+    id:6, profil:"Jean", num:2, sexe:"H", age:51, poids:65, taille:180,
+    profession:"Ingénieur agronome",
+    objectif:"Augmenter sa masse musculaire",
+    contexte:"Sédentaire, travail bureau et déplacements. Douleurs dorsales récurrentes. S'est blessé à l'épaule droite en faisant du développé couché seul. Ne maîtrise pas la technique des squats. 1 séance/semaine le samedi matin.",
+    tags:["Bureau","Épaule","Dos","Débutant tech."],
+    tagTypes:["blue","red","red","orange"],
+    question:"C'est un ingénieur analytique. Comment adapter ton coaching ?",
+    options:[
+      "Aller à l'essentiel sans trop expliquer pour gagner du temps",
+      "Expliquer le 'pourquoi' de chaque exercice avec un raisonnement logique",
+      "Utiliser beaucoup de métaphores sportives populaires (foot, rugby)",
+      "Se concentrer uniquement sur les sensations sans explications techniques"
+    ],
+    correct:1,
+    explanation:"Un ingénieur fonctionne par la logique et la compréhension. Lui expliquer 'ce RDL renforce les muscles extenseurs du rachis qui soutiennent ta colonne en position assise prolongée' sera beaucoup plus efficace qu'un simple 'allez, 5 reps !'. Il a besoin de comprendre pour adhérer."
+  },
+
+  // ── DOMINIQUE n°4 ──
+  {
+    id:7, profil:"Dominique", num:4, sexe:"H", age:64, poids:95, taille:187,
+    profession:"Retraité - ancien ouvrier",
+    objectif:"Retrouver de la force dans les jambes, garder la forme",
+    contexte:"Accident de moto l'an dernier, blessure au genou. Rééducation terminée, plus de douleur mais perte de force importante. Manque de mobilité pour enfourcher sa moto. 2 séances/semaine.",
+    tags:["Senior","Post-accident","Genou","Rééducation"],
+    tagTypes:["blue","red","red","green"],
+    question:"Dominique a fait une rééducation suite à une blessure au genou. Quelle question d'anamnèse est indispensable ?",
+    options:[
+      "Combien de temps a duré votre rééducation ?",
+      "Quel type de lésion (ligament, ménisque) ? Le kiné a-t-il donné des exercices à poursuivre ou à éviter ?",
+      "Est-ce que vous conduisez toujours votre moto ?",
+      "Quelle charge utilisiez-vous avant l'accident ?"
+    ],
+    correct:1,
+    explanation:"La nature de la lésion (LCA, ménisque, fracture) détermine directement les exercices autorisés et les angles à respecter. Les recommandations du kiné sont le protocole de référence — ne pas les respecter expose à une récidive et engage ta responsabilité professionnelle."
+  },
+  {
+    id:8, profil:"Dominique", num:4, sexe:"H", age:64, poids:95, taille:187,
+    profession:"Retraité - ancien ouvrier",
+    objectif:"Retrouver de la force dans les jambes, garder la forme",
+    contexte:"Accident de moto l'an dernier, blessure au genou. Rééducation terminée, plus de douleur mais perte de force importante. Manque de mobilité pour enfourcher sa moto. 2 séances/semaine.",
+    tags:["Senior","Post-accident","Genou","Rééducation"],
+    tagTypes:["blue","red","red","green"],
+    question:"Sur le goblet squat, quelle adaptation est la plus adaptée pour Dominique en phase initiale ?",
+    options:[
+      "Squat profond (ass-to-grass) pour récupérer toute la mobilité rapidement",
+      "Amplitude contrôlée, ne pas descendre au-delà de 90° tant que la stabilité n'est pas vérifiée",
+      "Remplacer le squat par du leg press machine uniquement",
+      "Utiliser une charge maximale pour reconstruire la force rapidement"
+    ],
+    correct:1,
+    explanation:"Après une blessure au genou, la proprioception et la stabilité sont les premières à être reconstruites avant l'amplitude maximale. Un squat profond trop précoce peut stresser les structures en cicatrisation. On progresse vers l'amplitude complète quand la stabilité est confirmée."
+  },
+  {
+    id:9, profil:"Dominique", num:4, sexe:"H", age:64, poids:95, taille:187,
+    profession:"Retraité - ancien ouvrier",
+    objectif:"Retrouver de la force dans les jambes, garder la forme",
+    contexte:"Accident de moto l'an dernier, blessure au genou. Rééducation terminée, plus de douleur mais perte de force importante. Manque de mobilité pour enfourcher sa moto. 2 séances/semaine.",
+    tags:["Senior","Post-accident","Genou","Rééducation"],
+    tagTypes:["blue","red","red","green"],
+    question:"Comment formuler l'objectif de séance avec Dominique pour maintenir sa motivation ?",
+    options:[
+      "Lui rappeler à chaque séance les risques de récidive pour le responsabiliser",
+      "Parler en termes d'objectif concret lié à la moto ('regagner la mobilité pour enfourcher facilement')",
+      "Se concentrer uniquement sur les indicateurs chiffrés (kg soulevés, reps)",
+      "Le traiter comme un senior fragile et limiter les exercices au minimum"
+    ],
+    correct:1,
+    explanation:"Dominique a un objectif de vie concret : reprendre la moto avec ses amis. Ancrer chaque exercice dans cet objectif ('ce squat vous aide à fléchir le genou pour passer la jambe sur la moto') crée du sens et booste l'adhésion. À 64 ans, actif de nature, il ne veut pas être traité comme fragile."
+  },
+
+  // ── DIDIER n°5 ──
+  {
+    id:10, profil:"Didier", num:5, sexe:"H", age:55, poids:68, taille:173,
+    profession:"Agent d'assurances",
+    objectif:"Muscler son dos",
+    contexte:"Sédentaire depuis 25 ans (bureau, voiture). Douleurs dorsales. Kiné recommande la musculation du dos. Débutant total mais très motivé. 1 séance/semaine le lundi midi.",
+    tags:["Bureau","Douleurs dos","Débutant","Kiné recommande"],
+    tagTypes:["blue","red","orange","green"],
+    question:"Le kiné de Didier lui recommande de 'se muscler le dos'. Quelle question d'anamnèse est essentielle ?",
+    options:[
+      "Depuis combien d'années souffrez-vous du dos ?",
+      "Les douleurs sont-elles plutôt lombaires ou dorsales ? Y a-t-il des exercices expressément contre-indiqués par le kiné ?",
+      "Avez-vous essayé le yoga ou le pilates ?",
+      "Quelle est votre charge de travail hebdomadaire ?"
+    ],
+    correct:1,
+    explanation:"La localisation précise de la douleur (lombaire vs dorsal) et les éventuelles contre-indications du kiné sont déterminantes. Un 'mal au dos' peut cacher une hernie discale, une spondylolyse ou une sténose — des pathologies qui peuvent contre-indiquer certains exercices comme la flexion lombaire sous charge."
+  },
+  {
+    id:11, profil:"Didier", num:5, sexe:"H", age:55, poids:68, taille:173,
+    profession:"Agent d'assurances",
+    objectif:"Muscler son dos",
+    contexte:"Sédentaire depuis 25 ans (bureau, voiture). Douleurs dorsales. Kiné recommande la musculation du dos. Débutant total mais très motivé. 1 séance/semaine le lundi midi.",
+    tags:["Bureau","Douleurs dos","Débutant","Kiné recommande"],
+    tagTypes:["blue","red","orange","green"],
+    question:"Didier est débutant total. Sur le RDL, quel est ton focus principal ?",
+    options:[
+      "Mettre le maximum de charge pour déclencher l'hypertrophie rapidement",
+      "Insister sur le dos neutre et la charnière hanche avant tout — la charge est secondaire",
+      "Remplacer le RDL par du leg curl machine, plus sûr pour un débutant",
+      "Faire du RDL unilatéral dès la première séance pour plus d'activation"
+    ],
+    correct:1,
+    explanation:"Chez un débutant avec douleurs dorsales, le RDL est excellent MAIS potentiellement dangereux si mal exécuté. Le dos neutre et la charnière hanche doivent être acquis avec peu ou pas de charge. Un RDL avec dos arrondi peut aggraver les douleurs. La progression de charge vient après la maîtrise technique."
+  },
+  {
+    id:12, profil:"Didier", num:5, sexe:"H", age:55, poids:68, taille:173,
+    profession:"Agent d'assurances",
+    objectif:"Muscler son dos",
+    contexte:"Sédentaire depuis 25 ans (bureau, voiture). Douleurs dorsales. Kiné recommande la musculation du dos. Débutant total mais très motivé. 1 séance/semaine le lundi midi.",
+    tags:["Bureau","Douleurs dos","Débutant","Kiné recommande"],
+    tagTypes:["blue","red","orange","green"],
+    question:"Didier ne sait pas du tout 'comment s'y prendre' mais est très motivé. Comment exploiter ça ?",
+    options:[
+      "Lui donner un programme complexe pour satisfaire sa motivation",
+      "Utiliser des analogies du quotidien pour créer des repères sensoriels ('dos droit comme au volant')",
+      "Aller vite pour ne pas perdre son temps de midi",
+      "Lui demander d'observer d'autres membres de la salle pour apprendre"
+    ],
+    correct:1,
+    explanation:"Un débutant n'a pas de repères proprioceptifs. Les analogies concrètes de sa vie quotidienne ('imaginez que vous tenez un plateau de serveur') créent immédiatement le bon pattern moteur. Sa forte motivation est un atout : elle compense l'inconfort de l'apprentissage technique."
+  },
+
+  // ── DUNCAN n°7 ──
+  {
+    id:13, profil:"Duncan", num:7, sexe:"H", age:47, poids:90, taille:185,
+    profession:"Cadre commercial",
+    objectif:"Perdre 8 à 10 kg avant 6 mois",
+    contexte:"Fumeur (1 paquet/jour), stress élevé, apéros fréquents. Sédentaire. Objectif ciblé dans 6 mois pour un championnat de France moto endurance. Mental de gagnant. 2 séances/semaine.",
+    tags:["Surpoids","Fumeur","Stress","Objectif daté"],
+    tagTypes:["orange","red","red","blue"],
+    question:"Duncan est fumeur actif et stressé. Quelle question d'anamnèse est CRITIQUE avant de démarrer ?",
+    options:[
+      "Quel est votre objectif précis de poids à atteindre ?",
+      "Avez-vous un bilan cardiovasculaire récent ? Votre tension artérielle est-elle surveillée ?",
+      "Combien d'apéros faites-vous par semaine en moyenne ?",
+      "Depuis combien de temps fumez-vous ?"
+    ],
+    correct:1,
+    explanation:"Un homme de 47 ans, fumeur actif avec stress chronique et surpoids constitue un profil à risque cardiovasculaire élevé. Avant tout effort intense, un bilan médical est impératif. Une hypertension non diagnostiquée sous effort intense peut provoquer un accident grave — ta responsabilité professionnelle est engagée."
+  },
+  {
+    id:14, profil:"Duncan", num:7, sexe:"H", age:47, poids:90, taille:185,
+    profession:"Cadre commercial",
+    objectif:"Perdre 8 à 10 kg avant 6 mois",
+    contexte:"Fumeur (1 paquet/jour), stress élevé, apéros fréquents. Sédentaire. Objectif ciblé dans 6 mois pour un championnat de France moto endurance. Mental de gagnant. 2 séances/semaine.",
+    tags:["Surpoids","Fumeur","Stress","Objectif daté"],
+    tagTypes:["orange","red","red","blue"],
+    question:"Duncan a un 'mental de gagnant'. Comment l'utiliser pour le TRX Row ?",
+    options:[
+      "Lui proposer un concours de reps avec un autre client",
+      "Créer un lien explicite avec la performance moto ('un dos gaîné stabilise votre position 6h en course')",
+      "Lui fixer un poids cible à atteindre sur TRX Row d'ici 6 semaines",
+      "Ne pas l'exploiter, rester factuel et neutre sur les bénéfices"
+    ],
+    correct:1,
+    explanation:"Duncan a un objectif cible précis (la course moto dans 6 mois) et un profil compétiteur. Relier chaque exercice à la performance en course active immédiatement son mode 'gagnant'. Le TRX Row travaille exactement les muscles stabilisateurs utilisés en position de pilotage prolongé."
+  },
+  {
+    id:15, profil:"Duncan", num:7, sexe:"H", age:47, poids:90, taille:185,
+    profession:"Cadre commercial",
+    objectif:"Perdre 8 à 10 kg avant 6 mois",
+    contexte:"Fumeur (1 paquet/jour), stress élevé, apéros fréquents. Sédentaire. Objectif ciblé dans 6 mois pour un championnat de France moto endurance. Mental de gagnant. 2 séances/semaine.",
+    tags:["Surpoids","Fumeur","Stress","Objectif daté"],
+    tagTypes:["orange","red","red","blue"],
+    question:"Comment aborder le sujet de la cigarette et des apéros avec Duncan ?",
+    options:[
+      "Le sensibiliser fortement à chaque séance aux risques du tabac et de l'alcool",
+      "Ne pas moraliser — rester focus sur la performance et les 6 mois, c'est lui qui choisit ses habitudes",
+      "Refuser de le coacher tant qu'il n'arrête pas de fumer",
+      "Lui conseiller une application de sevrage tabagique dès la 1ère séance"
+    ],
+    correct:1,
+    explanation:"Un coach MPT n'est pas médecin ni psychologue du comportement. Moraliser sur les habitudes de vie détériore la relation coach-client et fait fuir. Ton rôle est de l'accompagner dans son objectif. La réussite du programme suffit souvent à déclencher une prise de conscience sur les autres habitudes."
+  },
+
+  // ── STÉPHANE n°10 ──
+  {
+    id:16, profil:"Stéphane", num:10, sexe:"H", age:52, poids:85, taille:185,
+    profession:"Responsable chaîne de montage",
+    objectif:"Être plus musclé, plus sec, améliorer son souffle",
+    contexte:"Footballeur vétéran actif. Va encadrer des jeunes U12-U13. Anxieux (plan social en cours au travail). Veut être crédible physiquement face aux jeunes. 2 séances/semaine le soir.",
+    tags:["Sportif actif","Football","Stress","Souffle"],
+    tagTypes:["green","green","red","blue"],
+    question:"Stéphane joue encore au football en vétéran. Quelle question d'anamnèse est la plus pertinente ?",
+    options:[
+      "Quel est votre niveau en football (amateur, régional) ?",
+      "Avez-vous des blessures chroniques liées au football (chevilles, genoux) ? Quel est votre volume d'entraînement total avec le foot ?",
+      "Depuis combien d'années jouez-vous au football ?",
+      "Êtes-vous satisfait de vos performances actuelles ?"
+    ],
+    correct:1,
+    explanation:"Un footballeur vétéran a souvent des blessures séquellaires (entorses répétées, ménisques). Le volume total (foot + muscu) est aussi crucial pour éviter le surentraînement. Connaître ses jours de match et d'entraînement permet de placer les séances de musculation aux bons moments."
+  },
+  {
+    id:17, profil:"Stéphane", num:10, sexe:"H", age:52, poids:85, taille:185,
+    profession:"Responsable chaîne de montage",
+    objectif:"Être plus musclé, plus sec, améliorer son souffle",
+    contexte:"Footballeur vétéran actif. Va encadrer des jeunes U12-U13. Anxieux (plan social en cours au travail). Veut être crédible physiquement face aux jeunes. 2 séances/semaine le soir.",
+    tags:["Sportif actif","Football","Stress","Souffle"],
+    tagTypes:["green","green","red","blue"],
+    question:"Stéphane est anxieux à cause du plan social. Comment gérer ça pendant la séance ?",
+    options:[
+      "Aborder directement le sujet du plan social pour qu'il se sente compris",
+      "Maintenir une ambiance tonique et sportive — la séance est son exutoire, pas un espace de thérapie",
+      "Réduire l'intensité pour ne pas le sur-stresser",
+      "Lui conseiller de consulter un psychologue avant de continuer le coaching"
+    ],
+    correct:1,
+    explanation:"La séance de musculation est souvent un refuge contre le stress professionnel. Maintenir une ambiance énergique et positionnée sur la performance répond à son besoin sans envahir la sphère privée. Un coach n'est pas un thérapeute — ouvrir la porte au plan social peut transformer la séance en consultation."
+  },
+  {
+    id:18, profil:"Stéphane", num:10, sexe:"H", age:52, poids:85, taille:185,
+    profession:"Responsable chaîne de montage",
+    objectif:"Être plus musclé, plus sec, améliorer son souffle",
+    contexte:"Footballeur vétéran actif. Va encadrer des jeunes U12-U13. Anxieux (plan social en cours au travail). Veut être crédible physiquement face aux jeunes. 2 séances/semaine le soir.",
+    tags:["Sportif actif","Football","Stress","Souffle"],
+    tagTypes:["green","green","red","blue"],
+    question:"Pour améliorer le souffle de Stéphane en lien avec le football, quel exercice de ton circuit est le plus pertinent ?",
+    options:[
+      "Push-up car il renforce la poitrine",
+      "RDL car il recrute beaucoup de masse musculaire",
+      "Planche dynamique en mode finisher à intensité élevée",
+      "Goblet squat car il sollicite les quadriceps nécessaires au sprint"
+    ],
+    correct:2,
+    explanation:"La planche dynamique utilisée en finisher à haute intensité crée une réponse cardio-respiratoire significative tout en renforçant le gainage. Pour un footballeur, le gainage dynamique est directement transférable (duels, sprints, tirs). C'est l'exercice qui combine le mieux les deux objectifs : souffle + gainage fonctionnel."
+  },
+
+  // ── MANUEL n°14 ──
+  {
+    id:19, profil:"Manuel", num:14, sexe:"H", age:66, poids:80, taille:175,
+    profession:"Retraité (maçonnerie)",
+    objectif:"Renforcer ses abdominaux",
+    contexte:"A travaillé dur toute sa vie en maçonnerie. Douleurs genoux et dos. Son médecin conseille perte de poids et renforcement abdominal. Motivation : être en forme pour ses petits-enfants. 1 séance/semaine le mardi matin.",
+    tags:["Senior","Douleurs multiples","Prescription médicale","Famille"],
+    tagTypes:["blue","red","green","orange"],
+    question:"Le médecin de Manuel lui conseille de 'renforcer ses abdominaux'. Quelle question d'anamnèse est prioritaire ?",
+    options:[
+      "Quels exercices abdominaux faites-vous actuellement ?",
+      "Les douleurs aux genoux : diagnostic précis ? Des restrictions médicales spécifiques pour les membres inférieurs ?",
+      "Combien de petits-enfants avez-vous et quel âge ont-ils ?",
+      "À quelle heure préférez-vous vous entraîner ?"
+    ],
+    correct:1,
+    explanation:"Des douleurs de genoux chez un ancien maçon peuvent cacher de l'arthrose, des lésions méniscales ou une gonarthrose avancée. Ces pathologies peuvent contre-indiquer la flexion profonde de genou ou certaines charges. Connaître le diagnostic exact évite d'aggraver la situation lors des exercices de membres inférieurs."
+  },
+  {
+    id:20, profil:"Manuel", num:14, sexe:"H", age:66, poids:80, taille:175,
+    profession:"Retraité (maçonnerie)",
+    objectif:"Renforcer ses abdominaux",
+    contexte:"A travaillé dur toute sa vie en maçonnerie. Douleurs genoux et dos. Son médecin conseille perte de poids et renforcement abdominal. Motivation : être en forme pour ses petits-enfants. 1 séance/semaine le mardi matin.",
+    tags:["Senior","Douleurs multiples","Prescription médicale","Famille"],
+    tagTypes:["blue","red","green","orange"],
+    question:"Le médecin parle de 'renforcer les abdominaux'. Quel exercice de ton circuit remplit le mieux cet objectif pour Manuel ?",
+    options:[
+      "Les crunchs classiques pour cibler les droits de l'abdomen",
+      "La planche statique sur avant-bras (ou genoux) pour le gainage profond",
+      "Le goblet squat car il sollicite le core en charge",
+      "Le TRX Row car il stabilise le tronc"
+    ],
+    correct:1,
+    explanation:"Le médecin vise probablement le renforcement du core profond (transverse, multifides) pour le soutien lombaire — pas les droits de l'abdomen. La planche correspond exactement à cette demande. Les crunchs sont contre-indiqués en cas de problème lombaire car ils créent une flexion rachidienne répétée sous charge."
+  },
+  {
+    id:21, profil:"Manuel", num:14, sexe:"H", age:66, poids:80, taille:175,
+    profession:"Retraité (maçonnerie)",
+    objectif:"Renforcer ses abdominaux",
+    contexte:"A travaillé dur toute sa vie en maçonnerie. Douleurs genoux et dos. Son médecin conseille perte de poids et renforcement abdominal. Motivation : être en forme pour ses petits-enfants. 1 séance/semaine le mardi matin.",
+    tags:["Senior","Douleurs multiples","Prescription médicale","Famille"],
+    tagTypes:["blue","red","green","orange"],
+    question:"Comment relier l'exercice de RDL à l'objectif de vie de Manuel ?",
+    options:[
+      "Lui expliquer le gain de masse musculaire en termes scientifiques",
+      "Lui dire que ce mouvement lui permettra de se baisser pour porter ses petits-enfants sans douleur au dos",
+      "Lui montrer que des célébrités font le même exercice",
+      "Lui montrer ses progrès en kg soulevés d'une séance à l'autre"
+    ],
+    correct:1,
+    explanation:"Manuel travaille pour un objectif de vie concret : ses petits-enfants. Ancrer chaque exercice dans cette réalité ('vous vous baisserez pour les ramasser sans vous bloquer le dos') donne du sens immédiat à l'effort. C'est bien plus motivant pour un senior que des indicateurs de performance abstraits."
+  },
+
+  // ── MADELEINE n°15 ──
+  {
+    id:22, profil:"Madeleine", num:15, sexe:"F", age:68, poids:88, taille:176,
+    profession:"Retraitée - grand-mère",
+    objectif:"Améliorer sa mobilité et son confort dans la vie quotidienne",
+    contexte:"Très active par le passé (travaux manuels). Douleurs bas du dos, épaules et bras. 7 petits-enfants (3 mois à 4 ans). Veut rester capable de s'en occuper longtemps. 1 séance/semaine le jeudi après-midi.",
+    tags:["Senior","Douleurs épaules","Mobilité","Vie quotidienne"],
+    tagTypes:["blue","red","green","orange"],
+    question:"Madeleine a des douleurs aux épaules et aux bras. Quelle question est la plus importante avant le TRX Row ?",
+    options:[
+      "Avez-vous déjà fait de la musculation ou du fitness ?",
+      "Les douleurs épaules sont-elles des deux côtés ? Y a-t-il des mouvements douloureux spécifiques (lever les bras) ?",
+      "À quelle hauteur pouvez-vous lever les bras ?",
+      "Prenez-vous des anti-inflammatoires ?"
+    ],
+    correct:1,
+    explanation:"Avant de faire tirer Madeleine sur des sangles TRX, il faut absolument identifier les amplitudes douloureuses. Une tendinite de la coiffe des rotateurs (fréquente à 68 ans avec des travaux manuels intensifs) peut être aggravée par une traction. La bilatéralité de la douleur oriente aussi le diagnostic."
+  },
+  {
+    id:23, profil:"Madeleine", num:15, sexe:"F", age:68, poids:88, taille:176,
+    profession:"Retraitée - grand-mère",
+    objectif:"Améliorer sa mobilité et son confort dans la vie quotidienne",
+    contexte:"Très active par le passé (travaux manuels). Douleurs bas du dos, épaules et bras. 7 petits-enfants (3 mois à 4 ans). Veut rester capable de s'en occuper longtemps. 1 séance/semaine le jeudi après-midi.",
+    tags:["Senior","Douleurs épaules","Mobilité","Vie quotidienne"],
+    tagTypes:["blue","red","green","orange"],
+    question:"Sur la planche, quelle adaptation est la plus appropriée pour Madeleine ?",
+    options:[
+      "Planche dynamique complète pour maximiser le travail du core",
+      "Planche statique sur les genoux, 15-20 secondes",
+      "Planche sur les pieds pendant 1 minute",
+      "Supprimer la planche car trop dangereuse pour une senior de 68 ans"
+    ],
+    correct:1,
+    explanation:"La planche statique sur les genoux est l'adaptation idéale : elle travaille efficacement le gainage profond sans contraindre les épaules douloureuses (moins de charge en appui), et sans la coordination requise par la version dynamique. 15-20 secondes est réaliste pour une débutante senior."
+  },
+
+  // ── THILAI n°19 ──
+  {
+    id:24, profil:"Thilaï", num:19, sexe:"F", age:23, poids:72, taille:165,
+    profession:"Étudiante en droit",
+    objectif:"Perdre du poids",
+    contexte:"Ancienne tenniswoman en compétition. Entorse genou droit à 20 ans (guérie), prise de 25 kg depuis l'arrêt. Révisions nocturnes, stress études. Veut se défouler et entamer une perte de poids. 2 séances/semaine.",
+    tags:["Jeune adulte","Post-blessure","Reprise sportive","Stress"],
+    tagTypes:["green","red","green","orange"],
+    question:"Thilaï a eu une entorse grave au genou droit. Quelle question d'anamnèse est essentielle ?",
+    options:[
+      "Combien de poids voulez-vous perdre exactement ?",
+      "Le genou droit est-il totalement indolore aujourd'hui ? Avez-vous encore des appréhensions sur certains mouvements ?",
+      "Pourquoi avez-vous arrêté le tennis ?",
+      "Combien d'heures dormez-vous actuellement ?"
+    ],
+    correct:1,
+    explanation:"Une entorse grave il y a 3 ans avec prise de 25 kg peut signifier une instabilité résiduelle non diagnostiquée ou une proprioception toujours déficitaire. L'appréhension (crainte instinctive du genou) est un signe clinique fiable de récupération incomplète. C'est un signal d'alarme avant de mettre en charge."
+  },
+  {
+    id:25, profil:"Thilaï", num:19, sexe:"F", age:23, poids:72, taille:165,
+    profession:"Étudiante en droit",
+    objectif:"Perdre du poids",
+    contexte:"Ancienne tenniswoman en compétition. Entorse genou droit à 20 ans (guérie), prise de 25 kg depuis l'arrêt. Révisions nocturnes, stress études. Veut se défouler et entamer une perte de poids. 2 séances/semaine.",
+    tags:["Jeune adulte","Post-blessure","Reprise sportive","Stress"],
+    tagTypes:["green","red","green","orange"],
+    question:"Comment parler de l'objectif 'perte de poids' avec Thilaï pour maximiser son adhésion ?",
+    options:[
+      "Lui donner un objectif de poids précis à atteindre chaque mois",
+      "Parler en termes de reconquête d'identité sportive plutôt que de poids ('vous retrouvez votre niveau d'athlète')",
+      "Lui montrer des photos 'avant/après' d'autres clients pour la motiver",
+      "Calculer son IMC et lui expliquer où elle se situe"
+    ],
+    correct:1,
+    explanation:"Thilaï était une compétitrice. La prise de poids est vécue comme une perte d'identité sportive, pas seulement comme un problème esthétique. La repositionner comme une athlète en reprise est beaucoup plus motivant qu'un objectif purement pondéral. Les anciens sportifs répondent bien au langage de la performance."
+  },
+  {
+    id:26, profil:"Thilaï", num:19, sexe:"F", age:23, poids:72, taille:165,
+    profession:"Étudiante en droit",
+    objectif:"Perdre du poids",
+    contexte:"Ancienne tenniswoman en compétition. Entorse genou droit à 20 ans (guérie), prise de 25 kg depuis l'arrêt. Révisions nocturnes, stress études. Veut se défouler et entamer une perte de poids. 2 séances/semaine.",
+    tags:["Jeune adulte","Post-blessure","Reprise sportive","Stress"],
+    tagTypes:["green","red","green","orange"],
+    question:"Sur le goblet squat, quelle vigilance spécifique pour Thilaï ?",
+    options:[
+      "Vérifier la symétrie du mouvement et l'alignement du genou droit en particulier",
+      "Utiliser une charge maximale car elle a un bon niveau sportif de base",
+      "Aller directement en squat barre pour maximiser la dépense calorique",
+      "Limiter à 2 répétitions par side pour préserver le genou"
+    ],
+    correct:0,
+    explanation:"Le genou droit a un antécédent d'entorse grave. Même guéri, il peut présenter une asymétrie de stabilisation sous charge. Observer l'alignement genou-pied droit (valgus dynamique) pendant le squat permet de détecter un déficit proprioceptif résiduel et d'adapter la charge avant de progresser."
+  },
+
+  // ── INÈS n°22 ──
+  {
+    id:27, profil:"Inès", num:22, sexe:"F", age:21, poids:65, taille:165,
+    profession:"Étudiante en communication",
+    objectif:"Se muscler, particulièrement le dos",
+    contexte:"Passe de longues heures sur ordinateur et téléphone. Cyphose dorsale accentuée. Tensions entre les omoplates et gêne dans la nuque. Pratique la danse moderne et du footing. Veut corriger sa posture. 2 séances/semaine.",
+    tags:["Jeune","Bureau","Cyphose","Posture"],
+    tagTypes:["green","blue","red","orange"],
+    question:"Inès a une cyphose dorsale accentuée. Quelle question d'anamnèse est prioritaire ?",
+    options:[
+      "Combien d'heures par jour êtes-vous sur votre téléphone ?",
+      "Les douleurs cervicales descendent-elles parfois dans les bras ? La cyphose a-t-elle été évaluée médicalement ?",
+      "Quelle est votre note en danse moderne ?",
+      "Avez-vous essayé des exercices de posture sur YouTube ?"
+    ],
+    correct:1,
+    explanation:"Des douleurs cervicales irradiant dans les bras peuvent signaler une compression radiculaire cervicale (hernie discale cervicale), fréquente chez les jeunes avec cyphose accentuée et position tête-en-avant prolongée. Ce signe neurologique change radicalement la prescription et nécessite un avis médical préalable."
+  },
+  {
+    id:28, profil:"Inès", num:22, sexe:"F", age:21, poids:65, taille:165,
+    profession:"Étudiante en communication",
+    objectif:"Se muscler, particulièrement le dos",
+    contexte:"Passe de longues heures sur ordinateur et téléphone. Cyphose dorsale accentuée. Tensions entre les omoplates et gêne dans la nuque. Pratique la danse moderne et du footing. Veut corriger sa posture. 2 séances/semaine.",
+    tags:["Jeune","Bureau","Cyphose","Posture"],
+    tagTypes:["green","blue","red","orange"],
+    question:"Pour corriger la cyphose d'Inès, quel exercice de ton circuit est le PLUS prioritaire ?",
+    options:[
+      "Push-up pour renforcer les pectoraux",
+      "TRX Row avec focus sur la rétraction des omoplates",
+      "Planche dynamique pour le gainage global",
+      "Goblet squat pour la posture globale"
+    ],
+    correct:1,
+    explanation:"La cyphose dorsale est principalement causée par la faiblesse des rétracteurs de l'omoplate (rhomboïdes, trapèze moyen et inférieur) et les pectoraux raccourcis. Le TRX Row avec focus rétraction des omoplates ('serrer les omoplates en fin de mouvement') cible exactement ces muscles et crée l'anti-pattern de la cyphose."
+  },
+  {
+    id:29, profil:"Inès", num:22, sexe:"F", age:21, poids:65, taille:165,
+    profession:"Étudiante en communication",
+    objectif:"Se muscler, particulièrement le dos",
+    contexte:"Passe de longues heures sur ordinateur et téléphone. Cyphose dorsale accentuée. Tensions entre les omoplates et gêne dans la nuque. Pratique la danse moderne et du footing. Veut corriger sa posture. 2 séances/semaine.",
+    tags:["Jeune","Bureau","Cyphose","Posture"],
+    tagTypes:["green","blue","red","orange"],
+    question:"Comment relier le renforcement du dos à la pratique de la danse d'Inès ?",
+    options:[
+      "Lui expliquer que la musculation va la ralentir en danse",
+      "Lui dire qu'un dos renforcé améliore le port de tête et l'extension thoracique en danse",
+      "Lui conseiller d'arrêter la danse pendant la période de renforcement",
+      "Ne pas faire le lien — les deux activités sont indépendantes"
+    ],
+    correct:1,
+    explanation:"La danse moderne exige un port de tête, une verticalité du rachis et une extension thoracique que la cyphose compromet directement. Montrer le bénéfice concret pour sa passion ('vous tiendrez une ligne droite en arabesque grâce à ce travail') crée un lien émotionnel fort avec les exercices de renforcement."
+  },
+
+  // ── SARAH n°23 ──
+  {
+    id:30, profil:"Sarah", num:23, sexe:"F", age:24, poids:65, taille:170,
+    profession:"Community manager",
+    objectif:"Développer le volume de ses fessiers",
+    contexte:"2 ans de musculation. S'entraîne trop souvent et trop lourd. Stagne depuis 1 an malgré une pratique intensive. Aime les machines guidées et le cardio. 1 séance/semaine en plus de ses autres séances.",
+    tags:["Sportive avancée","Surentraînement","Fessiers","Stagnation"],
+    tagTypes:["green","red","orange","red"],
+    question:"Sarah stagne depuis 1 an malgré un entraînement intensif. Quelle question d'anamnèse est clé ?",
+    options:[
+      "Quels exercices faites-vous exactement pour les fessiers ?",
+      "Combien de séances faites-vous en tout par semaine ? Dormez-vous bien ? Vous sentez-vous fatiguée chroniquement ?",
+      "Depuis combien de temps avez-vous cet objectif fessiers ?",
+      "Consultez-vous des influenceurs fitness pour votre programme ?"
+    ],
+    correct:1,
+    explanation:"La stagnation après 2 ans avec volume élevé est le tableau classique du surentraînement. Le volume total hebdomadaire, la qualité du sommeil et les signes de fatigue chronique permettent de diagnostiquer ce problème. Sans cette information, tu risques de lui prescrire encore plus de volume — ce qui aggraverait la situation."
+  },
+  {
+    id:31, profil:"Sarah", num:23, sexe:"F", age:24, poids:65, taille:170,
+    profession:"Community manager",
+    objectif:"Développer le volume de ses fessiers",
+    contexte:"2 ans de musculation. S'entraîne trop souvent et trop lourd. Stagne depuis 1 an malgré une pratique intensive. Aime les machines guidées et le cardio. 1 séance/semaine en plus de ses autres séances.",
+    tags:["Sportive avancée","Surentraînement","Fessiers","Stagnation"],
+    tagTypes:["green","red","orange","red"],
+    question:"Sarah pense que son problème vient d'un manque de volume d'entraînement. Comment la faire évoluer ?",
+    options:[
+      "Valider son analyse et lui ajouter 2 séances supplémentaires ciblées fessiers",
+      "Utiliser les faits pour l'amener à questionner sa méthode : 'si tu stagnes avec plus de volume depuis 1 an, le problème n'est pas le volume'",
+      "Lui dire directement qu'elle a tort et qu'elle doit tout changer",
+      "Ne rien dire et adapter le programme sans expliquer pourquoi"
+    ],
+    correct:1,
+    explanation:"Contredire frontalement quelqu'un qui est convaincu de son approche crée de la résistance. La méthode socratique (amener la personne à questionner elle-même sa logique par des faits) est beaucoup plus efficace. Une fois qu'elle réalise la contradiction par elle-même, elle est prête à changer d'approche."
+  },
+  {
+    id:32, profil:"Sarah", num:23, sexe:"F", age:24, poids:65, taille:170,
+    profession:"Community manager",
+    objectif:"Développer le volume de ses fessiers",
+    contexte:"2 ans de musculation. S'entraîne trop souvent et trop lourd. Stagne depuis 1 an malgré une pratique intensive. Aime les machines guidées et le cardio. 1 séance/semaine en plus de ses autres séances.",
+    tags:["Sportive avancée","Surentraînement","Fessiers","Stagnation"],
+    tagTypes:["green","red","orange","red"],
+    question:"Sur le RDL avec Sarah, quel est le focus technique le plus utile pour son objectif fessiers ?",
+    options:[
+      "Descendre le plus bas possible pour étirer au maximum les ischios",
+      "Insister sur le 'squeeze' des fessiers en extension complète en haut du mouvement",
+      "Utiliser la charge maximale pour recruter un maximum de fibres musculaires",
+      "Faire des séries très longues (20+ reps) pour l'endurance musculaire"
+    ],
+    correct:1,
+    explanation:"La contraction volontaire des fessiers en fin de mouvement (squeeze) améliore la connexion neuromusculaire et l'activation des fessiers — souvent déficiente chez les pratiquants qui ont des dominances ischios. C'est ce manque de connexion fessière (pas le volume) qui explique souvent la stagnation."
+  },
+
+  // ── ISABELLE n°32 ──
+  {
+    id:33, profil:"Isabelle", num:32, sexe:"F", age:43, poids:55, taille:155,
+    profession:"Caissière hypermarché",
+    objectif:"Muscler le haut du corps (abdominaux, dos, épaules)",
+    contexte:"Sort d'une dépression liée au deuil de son mari. A repris le travail. Très mal au dos et aux coudes. Mouvements répétitifs en environnement bruyant. Débutante totale. 2 séances/semaine.",
+    tags:["Deuil","Dépression","Douleurs coudes","Débutante"],
+    tagTypes:["red","red","red","orange"],
+    question:"Isabelle sort d'une dépression suite à un deuil. Quelle question d'anamnèse est la plus délicate mais indispensable ?",
+    options:[
+      "Pouvez-vous me parler de votre mari ?",
+      "Prenez-vous un traitement médicamenteux en cours ? (certains antidépresseurs peuvent affecter l'effort ou la fréquence cardiaque)",
+      "Depuis combien de temps êtes-vous déprimée ?",
+      "Avez-vous un suivi psychologique ?"
+    ],
+    correct:1,
+    explanation:"Certains antidépresseurs (ISRS, tricycliques) peuvent modifier la réponse cardiaque à l'effort, provoquer des hypotensions orthostatiques ou affecter les capacités musculaires. C'est une information médicale légitimement nécessaire pour la sécurité — à poser avec tact, dans le cadre du bilan santé habituel, pas comme une intrusion."
+  },
+  {
+    id:34, profil:"Isabelle", num:32, sexe:"F", age:43, poids:55, taille:155,
+    profession:"Caissière hypermarché",
+    objectif:"Muscler le haut du corps (abdominaux, dos, épaules)",
+    contexte:"Sort d'une dépression liée au deuil de son mari. A repris le travail. Très mal au dos et aux coudes. Mouvements répétitifs en environnement bruyant. Débutante totale. 2 séances/semaine.",
+    tags:["Deuil","Dépression","Douleurs coudes","Débutante"],
+    tagTypes:["red","red","red","orange"],
+    question:"Isabelle a très mal aux coudes. Comment adapter le push-up ?",
+    options:[
+      "Supprimer définitivement le push-up du circuit",
+      "Tester d'abord — si douleur aux coudes en appui normal, proposer l'appui sur les poings (prise neutre) ou mains sur banc",
+      "Faire des push-up avec charge sur le dos pour renforcer plus vite",
+      "Remplacer par des dips car moins de contrainte sur les coudes"
+    ],
+    correct:1,
+    explanation:"L'appui sur les poings (prise neutre du poignet) réduit la pronation de l'avant-bras, souvent en cause dans les épicondylites liées aux mouvements répétitifs (caissière). La version mains sur banc diminue aussi la charge sur les membres supérieurs. Supprimer l'exercice sans tester prive du pattern de poussée."
+  },
+  {
+    id:35, profil:"Isabelle", num:32, sexe:"F", age:43, poids:55, taille:155,
+    profession:"Caissière hypermarché",
+    objectif:"Muscler le haut du corps (abdominaux, dos, épaules)",
+    contexte:"Sort d'une dépression liée au deuil de son mari. A repris le travail. Très mal au dos et aux coudes. Mouvements répétitifs en environnement bruyant. Débutante totale. 2 séances/semaine.",
+    tags:["Deuil","Dépression","Douleurs coudes","Débutante"],
+    tagTypes:["red","red","red","orange"],
+    question:"Quel est l'enjeu psychologique principal à gérer avec Isabelle lors de la séance ?",
+    options:[
+      "La pousser à se dépasser pour lui redonner confiance rapidement",
+      "Créer un espace sécurisant où chaque séance est une victoire, sans pression de performance",
+      "Lui montrer sa progression en termes de charge soulevée dès la 2ème séance",
+      "Maintenir une relation strictement professionnelle et distante"
+    ],
+    correct:1,
+    explanation:"Une personne sortant d'une dépression post-deuil a un espace psychique fragile. La séance doit être vécue comme un lieu de sécurité et de reconquête progressive de soi — pas de performance. Chaque séance réussie est une victoire en soi. La pression de performance peut déclencher une régression ou un abandon."
+  },
+  {
+    id:36, profil:"Isabelle", num:32, sexe:"F", age:43, poids:55, taille:155,
+    profession:"Caissière hypermarché",
+    objectif:"Muscler le haut du corps (abdominaux, dos, épaules)",
+    contexte:"Sort d'une dépression liée au deuil de son mari. A repris le travail. Très mal au dos et aux coudes. Mouvements répétitifs en environnement bruyant. Débutante totale. 2 séances/semaine.",
+    tags:["Deuil","Dépression","Douleurs coudes","Débutante"],
+    tagTypes:["red","red","red","orange"],
+    question:"Isabelle mentionne qu'elle a 'très mal au dos depuis des années'. Quelle question complémentaire poser ?",
+    options:[
+      "Est-ce que vous portez des charges lourdes à votre travail ?",
+      "La douleur est-elle lombaire ou dorsale ? En flexion (se baisser) ou en extension ? Avez-vous un suivi médical pour ce dos ?",
+      "Avez-vous déjà fait de la kinésithérapie ?",
+      "Combien d'heures restez-vous debout à votre caisse ?"
+    ],
+    correct:1,
+    explanation:"La localisation précise (lombaire/dorsal) et le mouvement déclencheur (flexion/extension) orientent directement les exercices à adapter. La caissière est en flexion antérieure prolongée — ses douleurs sont probablement lombaires en lien avec cette posture. Un suivi médical en cours peut aussi modifier ce que tu peux ou ne peux pas prescrire."
+  }
+];
+
+// ─── STATE ───────────────────────────────────────────────────
+let state = {
+  questions: [],
+  current: 0,
+  score: 0,
+  answered: false,
+  history: [],
+  errors: [],
+  mode: 'all'
+};
+
+function loadState() {
+  try {
+    const saved = localStorage.getItem('cqp_anam_state');
+    if (saved) {
+      const s = JSON.parse(saved);
+      state.errors = s.errors || [];
+      document.getElementById('statBest').textContent = s.best !== undefined ? s.best + '%' : '—';
+    }
+  } catch(e) {}
+}
+
+function saveState(score, total) {
+  try {
+    const pct = Math.round(score/total*100);
+    const saved = JSON.parse(localStorage.getItem('cqp_anam_state') || '{}');
+    const best = Math.max(saved.best || 0, pct);
+    localStorage.setItem('cqp_anam_state', JSON.stringify({
+      best, errors: state.errors
+    }));
+    document.getElementById('statBest').textContent = best + '%';
+  } catch(e) {}
+}
+
+// ─── NAVIGATION ──────────────────────────────────────────────
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function showModeScreen() {
+  showScreen('screenMode');
+  document.getElementById('headerScore').style.display = 'none';
+}
+
+// ─── MODE SELECT ──────────────────────────────────────────────
+function selectMode(el, mode) {
+  document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  state.mode = mode;
+}
+
+function startQuiz() {
+  let pool = [];
+  if (state.mode === 'all') {
+    pool = shuffle([...QUESTIONS]);
+  } else if (state.mode === 'random10') {
+    pool = shuffle([...QUESTIONS]).slice(0, 10);
+  } else if (state.mode === 'errors') {
+    const errorIds = state.errors;
+    pool = shuffle(QUESTIONS.filter(q => errorIds.includes(q.id)));
+    if (pool.length === 0) {
+      alert('Aucune erreur enregistrée. Lance d\'abord un quiz complet !');
+      return;
+    }
+  }
+  state.questions = pool;
+  state.current = 0;
+  state.score = 0;
+  state.answered = false;
+  state.history = [];
+  document.getElementById('headerScore').style.display = 'block';
+  showScreen('screenQuiz');
+  renderQuestion();
+}
+
+// ─── QUIZ LOGIC ───────────────────────────────────────────────
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function renderQuestion() {
+  const q = state.questions[state.current];
+  const total = state.questions.length;
+
+  // Progress
+  const pct = (state.current / total) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('qCounter').textContent = `Question ${state.current + 1} / ${total}`;
+
+  // Score header
+  document.getElementById('headerScoreVal').textContent = `${state.score}/${state.current}`;
+
+  // Profil card
+  const tagsHtml = q.tags.map((t,i) =>
+    `<span class="tag tag-${q.tagTypes[i]}">${t}</span>`
+  ).join('');
+  document.getElementById('profilCard').innerHTML = `
+    <div class="profil-header">
+      <div class="profil-avatar">${q.profil.charAt(0)}</div>
+      <div>
+        <div class="profil-name">${q.profil} <span style="font-size:.75rem;color:var(--muted);font-weight:400">#${q.num}</span></div>
+        <div class="profil-meta">${q.sexe === 'F' ? 'Femme' : 'Homme'} · ${q.age} ans · ${q.poids} kg / ${q.taille} cm · ${q.profession}</div>
+      </div>
+    </div>
+    <div class="profil-tags">${tagsHtml}</div>
+    <div class="profil-context"><b>Objectif :</b> ${q.objectif}<br/><span style="color:var(--small)">${q.contexte}</span></div>
+  `;
+
+  // Question
+  document.getElementById('questionText').textContent = q.question;
+
+  // Options
+  const letters = ['A','B','C','D'];
+  const container = document.getElementById('optionsContainer');
+  container.innerHTML = '';
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option';
+    btn.innerHTML = `<span class="opt-letter">${letters[i]}</span><span>${opt}</span>`;
+    btn.onclick = () => selectAnswer(i);
+    container.appendChild(btn);
+  });
+
+  // Reset
+  document.getElementById('explanation').style.display = 'none';
+  document.getElementById('explanation').classList.remove('visible');
+  document.getElementById('btnNext').classList.remove('visible');
+  state.answered = false;
+}
+
+function selectAnswer(idx) {
+  if (state.answered) return;
+  state.answered = true;
+
+  const q = state.questions[state.current];
+  const opts = document.querySelectorAll('.option');
+  opts.forEach(o => o.disabled = true);
+
+  const isCorrect = idx === q.correct;
+  if (isCorrect) {
+    state.score++;
+    opts[idx].classList.add('correct');
+    // Remove from errors if was there
+    state.errors = state.errors.filter(id => id !== q.id);
+  } else {
+    opts[idx].classList.add('wrong');
+    opts[q.correct].classList.add('reveal-correct');
+    // Add to errors
+    if (!state.errors.includes(q.id)) state.errors.push(q.id);
+  }
+
+  state.history.push({
+    q, selectedIdx: idx, isCorrect
+  });
+
+  // Explanation
+  const exp = document.getElementById('explanation');
+  exp.innerHTML = `<strong>${isCorrect ? '✅ Correct !' : '❌ Incorrect.'}</strong> ${q.explanation}`;
+  exp.style.display = 'block';
+  exp.classList.add('visible');
+
+  document.getElementById('btnNext').classList.add('visible');
+  document.getElementById('headerScoreVal').textContent = `${state.score}/${state.current + 1}`;
+}
+
+function nextQuestion() {
+  state.current++;
+  if (state.current >= state.questions.length) {
+    showResults();
+  } else {
+    renderQuestion();
+  }
+}
+
+// ─── RESULTS ─────────────────────────────────────────────────
+function showResults() {
+  const total = state.questions.length;
+  const pct = Math.round(state.score / total * 100);
+  saveState(state.score, total);
+
+  let colorClass = pct >= 80 ? 'score-green' : pct >= 60 ? 'score-orange' : 'score-red';
+  let msg = pct >= 80 ? '🔥 Excellent niveau — tu es prêt pour l\'épreuve 2 !'
+    : pct >= 60 ? '💪 Bon travail, encore quelques profils à consolider'
+    : '📚 Reprends les profils les plus difficiles avec le mode "Mes erreurs"';
+
+  document.getElementById('resultScore').innerHTML = `<span class="${colorClass}">${pct}%</span>`;
+  document.getElementById('resultTotal').textContent = `${state.score} bonnes réponses sur ${total}`;
+  document.getElementById('resultMsg').textContent = msg;
+
+  // Review list
+  const list = document.getElementById('reviewList');
+  list.innerHTML = '';
+  state.history.forEach((h, i) => {
+    const letters = ['A','B','C','D'];
+    const div = document.createElement('div');
+    div.className = `review-item ${h.isCorrect ? 'ok' : 'ko'}`;
+    div.innerHTML = `
+      <div class="review-profil">Profil ${h.q.num} — ${h.q.profil}</div>
+      <div class="review-q">${h.q.question}</div>
+      <div class="review-answer ${h.isCorrect ? 'ok' : 'ko'}">
+        ${h.isCorrect ? '✅' : '❌'} Tu as choisi : ${letters[h.selectedIdx]}. ${h.q.options[h.selectedIdx]}
+      </div>
+      ${!h.isCorrect ? `<div class="review-correct">✅ Correct : ${letters[h.q.correct]}. ${h.q.options[h.q.correct]}</div>` : ''}
+    `;
+    list.appendChild(div);
+  });
+
+  document.getElementById('headerScore').style.display = 'none';
+  showScreen('screenResults');
+}
+
+// ─── REVIEW PROFILS ──────────────────────────────────────────
+function showReview() {
+  const profilsUniq = {};
+  QUESTIONS.forEach(q => {
+    if (!profilsUniq[q.profil]) profilsUniq[q.profil] = q;
+  });
+
+  const container = document.getElementById('reviewProfilsList');
+  container.innerHTML = '';
+
+  Object.values(profilsUniq).forEach(q => {
+    const tagsHtml = q.tags.map((t,i) =>
+      `<span class="tag tag-${q.tagTypes[i]}">${t}</span>`
+    ).join('');
+
+    const allQ = QUESTIONS.filter(x => x.profil === q.profil);
+
+    let qHtml = allQ.map(x => `
+      <div style="margin-top:.75rem;padding-top:.75rem;border-top:1px solid var(--border)">
+        <div style="font-size:.78rem;font-weight:600;margin-bottom:.4rem">${x.question}</div>
+        ${x.options.map((o,i) => `
+          <div style="font-size:.72rem;padding:.25rem .5rem;border-radius:4px;margin-bottom:.2rem;background:${i===x.correct?'var(--green-dim)':'var(--surface2)'};color:${i===x.correct?'#bbf7d0':'var(--muted)'}">
+            ${['A','B','C','D'][i]}. ${o} ${i===x.correct?'✅':''}
+          </div>
+        `).join('')}
+        <div style="font-size:.7rem;color:var(--muted);margin-top:.4rem;font-style:italic">${x.explanation}</div>
+      </div>
+    `).join('');
+
+    const div = document.createElement('div');
+    div.style.cssText = 'background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:.75rem;overflow:hidden';
+    div.innerHTML = `
+      <div style="background:var(--blue-dim);padding:.75rem 1rem;cursor:pointer;display:flex;align-items:center;justify-content:space-between" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'">
+        <div>
+          <span style="font-weight:700;font-size:.9rem">${q.profil}</span>
+          <span style="font-size:.75rem;color:var(--muted);margin-left:.5rem">#${q.num} · ${q.sexe==='F'?'F':'H'} · ${q.age} ans · ${q.profession}</span>
+          <div style="margin-top:.4rem">${tagsHtml}</div>
+        </div>
+        <span style="color:var(--muted);font-size:.8rem">▼</span>
+      </div>
+      <div style="display:none;padding:.75rem 1rem">
+        <div style="font-size:.78rem;color:var(--muted);margin-bottom:.5rem"><b>Objectif :</b> ${q.objectif}</div>
+        <div style="font-size:.75rem;color:var(--small)">${q.contexte}</div>
+        ${qHtml}
+      </div>
+    `;
+    container.appendChild(div);
+  });
+
+  showScreen('screenReview');
+}
+
+// ─── INIT ────────────────────────────────────────────────────
+document.getElementById('statQuestions').textContent = QUESTIONS.length;
+loadState();
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js').catch(() => {});
+}
+</script>
+</body>
+</html>
