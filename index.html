@@ -2,211 +2,163 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <meta name="theme-color" content="#2563eb"/>
 <link rel="manifest" href="/manifest.json"/>
-<title>CQP IF — Quiz Anamnèse</title>
+<title>CQP IF — Préparation MPT</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#0f172a;--surface:#1e293b;--surface2:#2d3f55;--border:#334155;
-  --blue:#2563eb;--blue-light:#3b82f6;--blue-dim:#1e3a8a;
-  --green:#16a34a;--green-light:#22c55e;--green-dim:#14532d;
-  --red:#dc2626;--red-light:#ef4444;--red-dim:#7f1d1d;
-  --orange:#ea580c;--text:#f1f5f9;--muted:#94a3b8;--small:#64748b;
-  --radius:12px;--radius-sm:8px;
+  --bg:#0f172a;--s:#1e293b;--s2:#2d3f55;--bd:#334155;
+  --bl:#2563eb;--bll:#3b82f6;--bld:#1e3a8a;--blp:#dbeafe;
+  --gr:#16a34a;--grl:#22c55e;--grd:#14532d;
+  --rd:#dc2626;--rdl:#ef4444;--rdd:#7f1d1d;
+  --or:#ea580c;--ord:#431407;
+  --tx:#f1f5f9;--mu:#94a3b8;--sm:#64748b;
+  --r:12px;--rs:8px;
 }
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:2rem}
-
-/* ── HEADER ── */
-.header{background:linear-gradient(135deg,#1e3a5f,var(--blue-dim));padding:1rem 1.25rem;display:flex;align-items:center;gap:.75rem;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
-.header-icon{width:36px;height:36px;background:var(--blue);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
-.header-title{font-size:.95rem;font-weight:700;color:var(--text)}
-.header-sub{font-size:.7rem;color:var(--muted)}
-.header-score{margin-left:auto;text-align:right}
-.score-val{font-size:1.1rem;font-weight:700;color:var(--blue-light)}
-.score-label{font-size:.65rem;color:var(--muted)}
-
-/* ── SCREENS ── */
-.screen{display:none;padding:1rem;max-width:640px;margin:0 auto;animation:fadeIn .25s ease}
-.screen.active{display:block}
-@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-
-/* ── HOME ── */
-.home-hero{background:linear-gradient(135deg,var(--blue-dim),#1e3a5f);border-radius:var(--radius);padding:1.5rem;margin-bottom:1rem;text-align:center}
-.home-hero h1{font-size:1.4rem;font-weight:800;margin-bottom:.3rem}
-.home-hero p{font-size:.8rem;color:var(--muted)}
-.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin-bottom:1rem}
-.stat-card{background:var(--surface);border-radius:var(--radius-sm);padding:.75rem;text-align:center;border:1px solid var(--border)}
-.stat-num{font-size:1.4rem;font-weight:800;color:var(--blue-light)}
-.stat-label{font-size:.65rem;color:var(--muted);margin-top:.2rem}
-.btn{width:100%;padding:.875rem;border-radius:var(--radius-sm);border:none;font-size:.95rem;font-weight:700;cursor:pointer;transition:.2s}
-.btn-primary{background:var(--blue);color:#fff}
-.btn-primary:hover{background:var(--blue-light)}
-.btn-secondary{background:var(--surface2);color:var(--text);border:1px solid var(--border);margin-top:.5rem}
-.btn-secondary:hover{background:var(--border)}
-
-/* ── MODE SELECT ── */
-.mode-grid{display:grid;gap:.75rem;margin-bottom:1rem}
-.mode-card{background:var(--surface);border:2px solid var(--border);border-radius:var(--radius);padding:1rem;cursor:pointer;transition:.2s}
-.mode-card:hover{border-color:var(--blue);background:var(--surface2)}
-.mode-card.selected{border-color:var(--blue);background:var(--blue-dim)}
-.mode-title{font-weight:700;font-size:.9rem;margin-bottom:.3rem;display:flex;align-items:center;gap:.5rem}
-.mode-desc{font-size:.75rem;color:var(--muted)}
-
-/* ── QUIZ ── */
-.progress-bar{height:4px;background:var(--border);border-radius:2px;margin-bottom:1rem;overflow:hidden}
-.progress-fill{height:100%;background:var(--blue);transition:width .4s ease;border-radius:2px}
-.q-counter{font-size:.75rem;color:var(--muted);margin-bottom:.75rem;display:flex;justify-content:space-between}
-.profil-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;margin-bottom:1rem}
-.profil-header{display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem}
-.profil-avatar{width:40px;height:40px;border-radius:50%;background:var(--blue-dim);display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:800;color:var(--blue-light);flex-shrink:0}
-.profil-name{font-weight:700;font-size:1rem}
-.profil-meta{font-size:.7rem;color:var(--muted)}
-.profil-tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.5rem}
-.tag{font-size:.65rem;padding:.2rem .5rem;border-radius:20px;font-weight:600}
-.tag-blue{background:var(--blue-dim);color:var(--blue-light)}
-.tag-orange{background:#431407;color:#fb923c}
-.tag-green{background:var(--green-dim);color:var(--green-light)}
-.tag-red{background:var(--red-dim);color:#fca5a5}
-.profil-context{font-size:.78rem;color:var(--muted);line-height:1.5;border-top:1px solid var(--border);padding-top:.6rem;margin-top:.4rem}
-.question-text{font-size:.9rem;font-weight:600;line-height:1.5;margin-bottom:.875rem;color:var(--text)}
-.options{display:flex;flex-direction:column;gap:.5rem;margin-bottom:1rem}
-.option{background:var(--surface);border:2px solid var(--border);border-radius:var(--radius-sm);padding:.75rem 1rem;cursor:pointer;font-size:.82rem;line-height:1.4;transition:.15s;text-align:left;color:var(--text);display:flex;gap:.6rem;align-items:flex-start}
-.option:hover:not(:disabled){border-color:var(--blue);background:var(--surface2)}
-.option.correct{border-color:var(--green);background:var(--green-dim);color:#bbf7d0}
-.option.wrong{border-color:var(--red);background:var(--red-dim);color:#fecaca}
-.option.reveal-correct{border-color:var(--green);background:var(--green-dim);color:#bbf7d0}
-.option:disabled{cursor:default}
-.opt-letter{width:22px;height:22px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;flex-shrink:0;margin-top:.1rem}
-.option.correct .opt-letter{background:var(--green);color:#fff}
-.option.wrong .opt-letter{background:var(--red);color:#fff}
-.option.reveal-correct .opt-letter{background:var(--green);color:#fff}
-.explanation{background:var(--surface2);border-left:3px solid var(--blue);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:.75rem 1rem;font-size:.78rem;line-height:1.5;color:var(--muted);margin-bottom:1rem;display:none}
-.explanation.visible{display:block;animation:fadeIn .2s}
-.explanation strong{color:var(--text)}
-.btn-next{background:var(--blue);color:#fff;padding:.75rem;border-radius:var(--radius-sm);border:none;font-size:.9rem;font-weight:700;cursor:pointer;width:100%;display:none;margin-top:.25rem}
-.btn-next.visible{display:block;animation:fadeIn .2s}
-
-/* ── RESULTS ── */
-.result-hero{background:var(--surface);border-radius:var(--radius);padding:1.5rem;text-align:center;margin-bottom:1rem;border:1px solid var(--border)}
-.result-score{font-size:3rem;font-weight:800;margin:.5rem 0}
-.result-total{font-size:.85rem;color:var(--muted)}
-.result-msg{font-size:.9rem;margin-top:.5rem}
-.score-green{color:var(--green-light)}
-.score-orange{color:#fb923c}
-.score-red{color:var(--red-light)}
-.review-list{display:flex;flex-direction:column;gap:.5rem;margin-bottom:1rem}
-.review-item{background:var(--surface);border-radius:var(--radius-sm);padding:.75rem;border-left:3px solid}
-.review-item.ok{border-color:var(--green)}
-.review-item.ko{border-color:var(--red)}
-.review-profil{font-size:.7rem;color:var(--muted);margin-bottom:.2rem}
-.review-q{font-size:.78rem;font-weight:600;margin-bottom:.3rem}
-.review-answer{font-size:.72rem}
-.review-answer.ok{color:var(--green-light)}
-.review-answer.ko{color:#fca5a5}
-.review-correct{font-size:.72rem;color:var(--green-light);margin-top:.2rem}
-
-/* ── RESPONSIVE ── */
-@media(max-width:380px){
-  .header-title{font-size:.85rem}
-  .stat-num{font-size:1.2rem}
-  .question-text{font-size:.85rem}
-  .option{font-size:.78rem}
-}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;padding-bottom:2rem}
+.hdr{background:linear-gradient(135deg,#1e3a5f,var(--bld));padding:.875rem 1.25rem;display:flex;align-items:center;gap:.75rem;border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:100}
+.hdr-ic{width:36px;height:36px;background:var(--bl);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;cursor:pointer;flex-shrink:0}
+.hdr-t{font-size:.95rem;font-weight:700}.hdr-s{font-size:.7rem;color:var(--mu)}
+.sbadge{margin-left:auto;background:var(--bld);border:1px solid var(--bl);border-radius:20px;padding:.3rem .75rem;font-size:.8rem;font-weight:700;color:var(--bll);display:none}
+.sc{display:none;padding:1rem;max-width:640px;margin:0 auto;animation:fi .25s ease}.sc.on{display:block}
+@keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.hero{background:linear-gradient(135deg,var(--bld),#1e3a5f);border-radius:var(--r);padding:1.5rem;margin-bottom:1rem;text-align:center}
+.hero h1{font-size:1.4rem;font-weight:800;margin-bottom:.25rem}
+.hero p{font-size:.8rem;color:var(--mu)}
+.mcards{display:grid;gap:.75rem;margin-bottom:.75rem}
+.mc{background:var(--s);border:2px solid var(--bd);border-radius:var(--r);padding:1rem;cursor:pointer;transition:.15s;display:flex;align-items:center;gap:.9rem}
+.mc:hover{border-color:var(--bl);background:var(--s2)}
+.mc-ic{font-size:1.8rem;flex-shrink:0}.mc-tit{font-size:.9rem;font-weight:700;margin-bottom:.15rem}
+.mc-sub{font-size:.72rem;color:var(--mu)}.mc-pill{display:inline-block;margin-top:.35rem;font-size:.63rem;padding:.15rem .5rem;border-radius:20px;font-weight:600}
+.pill-bl{background:var(--bld);color:#93c5fd}.pill-gr{background:var(--grd);color:#86efac}
+.pill-pu{background:#4c1d95;color:#c4b5fd}.pill-or{background:var(--ord);color:#fb923c}
+.gstat{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:.75rem}
+.gsc{background:var(--s);border:1px solid var(--bd);border-radius:var(--rs);padding:.75rem;text-align:center}
+.gsn{font-size:1.3rem;font-weight:800;color:var(--bll)}.gsl{font-size:.65rem;color:var(--mu);margin-top:.1rem}
+.btn{width:100%;padding:.875rem;border-radius:var(--rs);border:none;font-size:.9rem;font-weight:700;cursor:pointer;transition:.2s;margin-top:.5rem}
+.btnp{background:var(--bl);color:#fff}.btnp:hover{background:var(--bll)}
+.btns{background:var(--s2);color:var(--tx);border:1px solid var(--bd)}
+.bback{background:transparent;color:var(--mu);border:1px solid var(--bd);font-size:.8rem;padding:.5rem 1rem;border-radius:var(--rs);cursor:pointer;margin-bottom:.75rem;width:auto}
+.dgrid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:.875rem}
+.dc{background:var(--s);border:2px solid var(--bd);border-radius:var(--rs);padding:.875rem;cursor:pointer;transition:.15s}
+.dc:hover{border-color:var(--bl);background:var(--s2)}.dc.sel{border-color:var(--bl);background:var(--bld)}
+.dc.full{grid-column:1/-1}.dc-ic{font-size:1.2rem;margin-bottom:.3rem}
+.dc-t{font-size:.85rem;font-weight:700}.dc-s{font-size:.7rem;color:var(--mu);margin-top:.1rem}
+.pbar{height:4px;background:var(--bd);border-radius:2px;margin-bottom:.875rem;overflow:hidden}
+.pfill{height:100%;background:var(--bl);transition:width .4s;border-radius:2px}
+.qmeta{display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem}
+.qn{font-size:.75rem;color:var(--mu)}.qtag{font-size:.7rem;padding:.2rem .6rem;border-radius:20px;font-weight:600}
+.tg-anam{background:var(--bld);color:#93c5fd}.tg-uc1{background:var(--grd);color:#86efac}.tg-uc4{background:#4c1d95;color:#c4b5fd}
+.qcard{background:var(--s);border:1px solid var(--bd);border-radius:var(--r);padding:1rem;margin-bottom:.875rem}
+.pav{width:38px;height:38px;border-radius:50%;background:var(--bld);display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:800;color:var(--bll);flex-shrink:0}
+.ptags{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.35rem}
+.pt{font-size:.63rem;padding:.15rem .4rem;border-radius:20px;font-weight:600}
+.pt-b{background:var(--bld);color:#93c5fd}.pt-o{background:var(--ord);color:#fb923c}
+.pt-g{background:var(--grd);color:#86efac}.pt-r{background:var(--rdd);color:#fca5a5}
+.ctx{font-size:.77rem;color:var(--mu);line-height:1.5;border-top:1px solid var(--bd);padding-top:.6rem;margin-top:.5rem}
+.qt{font-size:.9rem;font-weight:600;line-height:1.5;color:var(--tx)}
+.opts{display:flex;flex-direction:column;gap:.5rem;margin-bottom:.875rem}
+.op{background:var(--s);border:2px solid var(--bd);border-radius:var(--rs);padding:.75rem 1rem;cursor:pointer;font-size:.82rem;line-height:1.4;transition:.15s;text-align:left;color:var(--tx);display:flex;gap:.6rem;align-items:flex-start;width:100%}
+.op:hover:not(:disabled){border-color:var(--bl);background:var(--s2)}
+.op.ok{border-color:var(--gr);background:var(--grd);color:#bbf7d0}
+.op.ko{border-color:var(--rd);background:var(--rdd);color:#fecaca}
+.op.rv{border-color:var(--gr);background:var(--grd);color:#bbf7d0}
+.op:disabled{cursor:default}
+.ol{width:22px;height:22px;min-width:22px;border-radius:50%;background:var(--bd);display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;margin-top:.1rem}
+.op.ok .ol,.op.rv .ol{background:var(--gr)}.op.ko .ol{background:var(--rd)}
+.expl{background:var(--s2);border-left:3px solid var(--bl);border-radius:0 var(--rs) var(--rs) 0;padding:.75rem 1rem;font-size:.78rem;line-height:1.55;color:var(--mu);margin-bottom:.75rem;display:none}
+.expl.on{display:block}.expl strong{color:var(--tx)}
+.bnxt{background:var(--bl);color:#fff;padding:.75rem;border-radius:var(--rs);border:none;font-size:.9rem;font-weight:700;cursor:pointer;width:100%;display:none}
+.bnxt.on{display:block}
+.rpct{font-size:3rem;font-weight:800}.sg{color:var(--grl)}.so{color:#fb923c}.sr{color:var(--rdl)}
+.drgrid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:1rem}
+.drc{background:var(--s);border:1px solid var(--bd);border-radius:var(--rs);padding:.75rem;text-align:center}
+.drs{font-size:1.2rem;font-weight:800}
+.ritem{background:var(--s);border-radius:var(--rs);padding:.75rem;border-left:3px solid;margin-bottom:.5rem}
+.ritem.ok{border-color:var(--gr)}.ritem.ko{border-color:var(--rd)}
+.rdom{font-size:.65rem;color:var(--mu);margin-bottom:.15rem}.rq{font-size:.78rem;font-weight:600;margin-bottom:.25rem}
+.rans{font-size:.72rem}.rans.ok{color:var(--grl)}.rans.ko{color:#fca5a5}
+.rcor{font-size:.72rem;color:var(--grl);margin-top:.2rem}
+.fsec{background:var(--s);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;margin-bottom:.6rem}
+.fhd{background:var(--bld);padding:.75rem 1rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.fht{font-weight:700;font-size:.9rem}
+.fbody{display:none;padding:.75rem 1rem}
+.frow{display:flex;gap:.75rem;padding:.4rem 0;border-bottom:1px solid var(--bd);font-size:.79rem}
+.frow:last-child{border-bottom:none}.flbl{color:var(--mu);min-width:110px;flex-shrink:0;font-weight:600;font-size:.75rem}
+.fval{color:var(--tx);line-height:1.5}
+@media(max-width:380px){.qt{font-size:.85rem}.op{font-size:.78rem}}
 </style>
 </head>
 <body>
-
-<div class="header">
-  <div class="header-icon">🏋️</div>
-  <div>
-    <div class="header-title">CQP IF — Anamnèse</div>
-    <div class="header-sub">Épreuve 2 · Personal Training</div>
-  </div>
-  <div class="header-score" id="headerScore" style="display:none">
-    <div class="score-val" id="headerScoreVal">0/0</div>
-    <div class="score-label">score</div>
-  </div>
+<div class="hdr">
+  <div class="hdr-ic" id="hic" onclick="goHub()">🏋️</div>
+  <div><div class="hdr-t" id="ht">CQP IF — Préparation MPT</div><div class="hdr-s" id="hs">Choisir un module</div></div>
+  <div class="sbadge" id="sb">0/0</div>
 </div>
 
-<!-- HOME -->
-<div class="screen active" id="screenHome">
-  <div class="home-hero">
-    <h1>Quiz Anamnèse</h1>
-    <p>Maîtrise les questions clés pour chaque profil client</p>
+<!-- HUB -->
+<div class="sc on" id="shub">
+  <div class="hero"><h1>CQP IF — MPT</h1><p>Quiz de préparation — 84 questions · 3 modules</p></div>
+  <div class="mcards">
+    <div class="mc" onclick="openMod('anam')"><div class="mc-ic">🩺</div><div><div class="mc-tit">Anamnèse — Épreuve 2</div><div class="mc-sub">Questions clés par profil · Adaptations · Pédagogie</div><span class="mc-pill pill-bl">36 questions · 12 profils</span></div></div>
+    <div class="mc" onclick="openMod('uc1')"><div class="mc-ic">🔒</div><div><div class="mc-tit">UC1 — Sécurité</div><div class="mc-sub">ERP · Responsabilité civile & pénale · Secourisme</div><span class="mc-pill pill-gr">18 questions</span></div></div>
+    <div class="mc" onclick="openMod('uc4')"><div class="mc-ic">📈</div><div><div class="mc-tit">UC4 — Marketing</div><div class="mc-sub">SWOT · Zone de chalandise · Fidélisation · ROI</div><span class="mc-pill pill-pu">30 questions</span></div></div>
+    <div class="mc" onclick="openMod('all')"><div class="mc-ic">🔀</div><div><div class="mc-tit">Tout mélangé</div><div class="mc-sub">Tous les modules confondus</div><span class="mc-pill pill-or">84 questions</span></div></div>
+    <div class="mc" onclick="openMod('err')"><div class="mc-ic">❌</div><div><div class="mc-tit">Mes erreurs</div><div class="mc-sub">Reprendre uniquement les questions ratées</div><span class="mc-pill pill-or" id="errPill">0 erreur</span></div></div>
   </div>
-  <div class="stats-grid">
-    <div class="stat-card"><div class="stat-num">12</div><div class="stat-label">Profils</div></div>
-    <div class="stat-card"><div class="stat-num" id="statQuestions">36</div><div class="stat-label">Questions</div></div>
-    <div class="stat-card"><div class="stat-num" id="statBest">—</div><div class="stat-label">Meilleur</div></div>
+  <div class="gstat">
+    <div class="gsc"><div class="gsn" id="gbest">—</div><div class="gsl">Meilleur score</div></div>
+    <div class="gsc"><div class="gsn" id="gerr" style="color:var(--rdl)">0</div><div class="gsl">Erreurs à reprendre</div></div>
   </div>
-  <button class="btn btn-primary" onclick="showModeScreen()">Commencer le quiz</button>
-  <button class="btn btn-secondary" onclick="showReview()">Réviser tous les profils</button>
+  <button class="btn btns" onclick="openFiches()">📋 Fiches de révision</button>
 </div>
 
-<!-- MODE -->
-<div class="screen" id="screenMode">
-  <div style="margin-bottom:1rem">
-    <div style="font-weight:700;font-size:1rem;margin-bottom:.25rem">Mode de quiz</div>
-    <div style="font-size:.78rem;color:var(--muted)">Choisis comment tu veux t'entraîner</div>
-  </div>
-  <div class="mode-grid">
-    <div class="mode-card selected" onclick="selectMode(this,'all')" data-mode="all">
-      <div class="mode-title">🔀 Tous les profils</div>
-      <div class="mode-desc">36 questions mélangées — tous les 12 profils</div>
-    </div>
-    <div class="mode-card" onclick="selectMode(this,'random10')" data-mode="random10">
-      <div class="mode-title">⚡ Session rapide</div>
-      <div class="mode-desc">10 questions aléatoires — 5 min chrono</div>
-    </div>
-    <div class="mode-card" onclick="selectMode(this,'errors')" data-mode="errors">
-      <div class="mode-title">❌ Mes erreurs</div>
-      <div class="mode-desc">Reprendre uniquement les questions ratées</div>
-    </div>
-  </div>
-  <button class="btn btn-primary" onclick="startQuiz()">Lancer</button>
-  <button class="btn btn-secondary" onclick="showScreen('screenHome')">Retour</button>
+<!-- MODULE ACCUEIL -->
+<div class="sc" id="smod">
+  <button class="bback" onclick="goHub()">← Accueil</button>
+  <div style="font-weight:700;font-size:1.1rem;margin-bottom:.2rem" id="modtit"></div>
+  <div style="font-size:.78rem;color:var(--mu);margin-bottom:.875rem" id="modsub"></div>
+  <div class="dgrid" id="dgrid"></div>
+  <button class="btn btnp" onclick="startQ()">Démarrer le quiz</button>
 </div>
 
 <!-- QUIZ -->
-<div class="screen" id="screenQuiz">
-  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-  <div class="q-counter">
-    <span id="qCounter">Question 1 / 36</span>
-    <span id="qStreak"></span>
-  </div>
-  <div class="profil-card" id="profilCard"></div>
-  <div class="question-text" id="questionText"></div>
-  <div class="options" id="optionsContainer"></div>
-  <div class="explanation" id="explanation"></div>
-  <button class="btn-next" id="btnNext" onclick="nextQuestion()">Suivant →</button>
+<div class="sc" id="squiz">
+  <div class="pbar"><div class="pfill" id="pf" style="width:0%"></div></div>
+  <div class="qmeta"><span class="qn" id="qn">1/36</span><span class="qtag" id="qtg"></span></div>
+  <div class="qcard" id="qcard"></div>
+  <div class="opts" id="opts"></div>
+  <div class="expl" id="expl"></div>
+  <button class="bnxt" id="bnxt" onclick="nextQ()">Suivant →</button>
 </div>
 
-<!-- RESULTS -->
-<div class="screen" id="screenResults">
-  <div class="result-hero">
-    <div style="font-size:1.1rem;font-weight:700">Quiz terminé 💪</div>
-    <div class="result-score" id="resultScore"></div>
-    <div class="result-total" id="resultTotal"></div>
-    <div class="result-msg" id="resultMsg"></div>
+<!-- RÉSULTATS -->
+<div class="sc" id="sres">
+  <div style="background:var(--s);border:1px solid var(--bd);border-radius:var(--r);padding:1.5rem;text-align:center;margin-bottom:1rem">
+    <div style="font-size:1rem;font-weight:700;margin-bottom:.5rem">Quiz terminé 💪</div>
+    <div class="rpct" id="rpct"></div>
+    <div style="font-size:.8rem;color:var(--mu);margin:.3rem 0" id="rsub"></div>
+    <div style="font-size:.85rem;margin-top:.4rem" id="rmsg"></div>
   </div>
-  <div style="font-weight:700;font-size:.85rem;color:var(--muted);margin-bottom:.5rem">Détail par question</div>
-  <div class="review-list" id="reviewList"></div>
-  <button class="btn btn-primary" onclick="showModeScreen()">Rejouer</button>
-  <button class="btn btn-secondary" onclick="showScreen('screenHome')">Accueil</button>
+  <div class="drgrid" id="drg"></div>
+  <div style="font-weight:700;font-size:.8rem;color:var(--mu);margin-bottom:.5rem">Détail des réponses</div>
+  <div id="rlist"></div>
+  <button class="btn btnp" onclick="openMod(G.mod)">Rejouer</button>
+  <button class="btn btns" onclick="goHub()">Accueil</button>
 </div>
 
-<!-- REVIEW (fiches profils) -->
-<div class="screen" id="screenReview">
-  <div style="font-weight:700;font-size:1rem;margin-bottom:.75rem">📋 Tous les profils</div>
-  <div id="reviewProfilsList"></div>
-  <button class="btn btn-secondary" onclick="showScreen('screenHome')">Retour</button>
+<!-- FICHES -->
+<div class="sc" id="sfich">
+  <button class="bback" onclick="goHub()">← Accueil</button>
+  <div style="font-weight:700;font-size:1rem;margin-bottom:.75rem">📋 Fiches de révision rapide</div>
+  <div id="flist"></div>
 </div>
 
 <script>
-// ─── DONNÉES ───────────────────────────────────────────────────────────────
-const QUESTIONS = [
+// ══ DONNÉES ══
+const ANAM_Q = [
   // ── SIMONE n°1 ──
   {
     id:1, profil:"Simone", num:1, sexe:"F", age:63, poids:75, taille:155,
@@ -844,281 +796,576 @@ const QUESTIONS = [
   }
 ];
 
-// ─── STATE ───────────────────────────────────────────────────
-let state = {
-  questions: [],
-  current: 0,
-  score: 0,
-  answered: false,
-  history: [],
-  errors: [],
-  mode: 'all'
+const UC_Q = [
+// ══ UC1 — ERP ══
+{id:1001,uc:'uc1',theme:'ERP',
+q:"Qu'est-ce qu'un ERP et dans quelle catégorie se classe une salle de fitness ?",
+opts:["Type M (grande surface), 1ère catégorie","Type X (établissement sportif couvert), catégorie selon effectif","Type W (bureaux), 5ème catégorie","Type L (salle de réunion), 3ème catégorie"],
+c:1,e:"Les ERP de type X regroupent les établissements sportifs couverts. La catégorie (1 à 5) dépend de l'effectif : la 5ème catégorie concerne les ERP de moins de 200 personnes, ce qui inclut la plupart des petites salles indépendantes."},
+
+{id:1002,uc:'uc1',theme:'ERP',
+q:"Quel document obligatoire recense toutes les vérifications périodiques de sécurité d'un ERP ?",
+opts:["Le plan d'évacuation","Le registre de sécurité","L'attestation DUERP","La fiche de contrôle annuelle"],
+c:1,e:"Le registre de sécurité est un document obligatoire pour tout ERP. Il recense les vérifications annuelles (extincteurs, électricité, désenfumage, DEA), les exercices d'évacuation et les visites de la commission de sécurité. Il doit être présenté à toute inspection."},
+
+{id:1003,uc:'uc1',theme:'ERP',
+q:"Quelle est la fréquence minimale des visites de la commission de sécurité pour un ERP de 4ème ou 5ème catégorie ?",
+opts:["Tous les ans","Tous les 3 ans","Tous les 5 ans","Tous les 10 ans"],
+c:2,e:"Pour les ERP de 4ème et 5ème catégorie (petites structures), la commission de sécurité effectue ses visites tous les 5 ans. Pour les catégories supérieures (1ère à 3ème), la fréquence est de 3 ans. Ces visites vérifient la conformité des installations de sécurité."},
+
+{id:1004,uc:'uc1',theme:'ERP',
+q:"Quelle obligation spécifique s'applique aux dégagements (couloirs, sorties) d'un ERP ?",
+opts:["Ils doivent être éclairés uniquement la nuit","Ils doivent être libres en permanence et respecter des largeurs minimales réglementées","Ils doivent être couverts par une caméra de surveillance","Ils doivent être fermés à clé en dehors des horaires d'ouverture"],
+c:1,e:"Les dégagements doivent être dégagés en permanence pour permettre l'évacuation rapide. Les largeurs minimales sont réglementées selon la catégorie d'ERP. Obstruer un couloir ou bloquer une sortie de secours constitue une infraction grave pouvant engager la responsabilité pénale du gérant."},
+
+{id:1005,uc:'uc1',theme:'ERP',
+q:"Depuis quel décret le DEA (Défibrillateur Automatisé Externe) est-il obligatoire dans les établissements sportifs ?",
+opts:["Décret du 4 mai 2007","Décret du 1er janvier 2000","Décret du 15 mars 2015","Décret du 8 juin 2012"],
+c:0,e:"Le décret du 4 mai 2007 rend obligatoire la présence d'un DEA dans les établissements sportifs recevant du public. Il doit être accessible, signalé, et le personnel doit être formé à son utilisation. Son absence expose le gérant à une mise en cause en cas d'arrêt cardiaque."},
+
+{id:1006,uc:'uc1',theme:'ERP',
+q:"Qu'est-ce que l'éclairage de sécurité obligatoire dans un ERP ?",
+opts:["Un simple éclairage LED économique","Un éclairage de secours autonome balisisant les voies d'évacuation, d'autonomie minimale 1 heure","Un éclairage renforcé pour les zones à risque","Un projecteur de chantier pour les vérifications nocturnes"],
+c:1,e:"L'éclairage de sécurité (BAES - Blocs Autonomes d'Éclairage de Sécurité) balisent les voies d'évacuation et restent alimentés en cas de coupure électrique. L'autonomie minimale réglementaire est d'une heure. Ils doivent être vérifiés mensuellement et leur bon fonctionnement consigné dans le registre de sécurité."},
+
+// ══ UC1 — Responsabilité ══
+{id:1007,uc:'uc1',theme:'Responsabilité',
+q:"Qu'est-ce que la responsabilité civile professionnelle d'un coach ?",
+opts:["La responsabilité de payer ses cotisations URSSAF","L'obligation légale d'indemniser les dommages causés aux tiers dans l'exercice de son activité professionnelle","L'obligation de déclarer ses revenus aux impôts","La responsabilité de tenir une comptabilité à jour"],
+c:1,e:"La RC pro couvre les dommages causés aux clients ou tiers dans le cadre de l'activité (blessure due à un mauvais encadrement, matériel défectueux, erreur de prescription). Elle est OBLIGATOIRE pour tout professionnel exerçant contre rémunération. Sans assurance, le coach engage son patrimoine personnel."},
+
+{id:1008,uc:'uc1',theme:'Responsabilité',
+q:"Dans quel délai un coach doit-il déclarer un accident à son assurance RC pro ?",
+opts:["24 heures","48 heures","5 jours ouvrés","1 mois"],
+c:2,e:"La déclaration d'accident auprès de l'assurance RC pro doit être effectuée dans les 5 jours ouvrés suivant le sinistre. Au-delà, l'assureur peut invoquer la déchéance de garantie. Il est conseillé de remplir également un rapport d'incident interne avec témoins, date, heure et circonstances précises."},
+
+{id:1009,uc:'uc1',theme:'Responsabilité',
+q:"Qu'est-ce que la responsabilité pénale d'un coach sportif ?",
+opts:["La responsabilité financière vis-à-vis du fisc","La responsabilité personnelle devant la justice en cas d'infraction (blessures involontaires, exercice illégal, mise en danger)","La responsabilité de former d'autres coachs","La responsabilité de respecter le RGPD"],
+c:1,e:"La responsabilité pénale engage la personne physique (pas l'assurance) devant un tribunal correctionnel. Les principales infractions : blessures involontaires par négligence, mise en danger délibérée d'autrui, exercice illégal d'une APS réglementée sans diplôme. Les peines peuvent aller jusqu'à l'emprisonnement."},
+
+{id:1010,uc:'uc1',theme:'Responsabilité',
+q:"Un client se blesse sur une machine défectueuse que le coach avait remarquée mais n'avait pas signalée. Quelle responsabilité est engagée ?",
+opts:["Aucune, c'est la faute du client qui aurait dû vérifier le matériel","Responsabilité civile du coach pour faute par négligence (non-signalement d'un danger connu)","Responsabilité uniquement du fabricant de la machine","Responsabilité uniquement du gérant de la salle"],
+c:1,e:"Avoir connaissance d'un danger et ne pas agir constitue une faute par négligence qui engage la RC du coach. Il avait l'obligation de signaler immédiatement le problème, de mettre la machine hors service et d'en avertir la direction. Cette inaction peut également constituer une mise en danger si les conséquences sont graves."},
+
+{id:1011,uc:'uc1',theme:'Responsabilité',
+q:"Qu'est-ce que l'obligation d'information vis-à-vis d'un nouveau client ?",
+opts:["L'obligation de lui vendre un abonnement premium","L'obligation de l'informer des risques liés à l'activité, d'obtenir un certificat médical et de recueillir son consentement éclairé","L'obligation de lui présenter tous les coachs de la salle","L'obligation de lui montrer le registre de sécurité"],
+c:1,e:"Avant toute pratique, le coach doit : informer le client des risques inhérents à l'activité, recueillir les informations de santé (antécédents, contre-indications), obtenir idéalement un certificat médical de non contre-indication, et faire signer un consentement éclairé. Ces documents protègent le coach en cas de litige."},
+
+// ══ UC1 — Secourisme ══
+{id:1012,uc:'uc1',theme:'Secourisme',
+q:"Dans le protocole de prise en charge d'un malaise cardiaque, quelle est la séquence correcte ?",
+opts:["Allonger → masser → appeler le 15","Alerter le 15 → vérifier conscience et respiration → RCP si nécessaire → DEA dès disponible","Donner de l'aspirine → appeler → attendre les secours","Appliquer de la glace → mettre en PLS → appeler"],
+c:1,e:"La séquence : 1. Alerter le 15 (ou faire alerter). 2. Sécuriser. 3. Vérifier conscience (stimulation verbale + tactile). 4. Vérifier respiration (10 sec max). 5. Si inconscient + apnée = débuter RCP (30 compressions / 2 insufflations). 6. Mettre en marche le DEA dès disponible et suivre les instructions. 7. Continuer jusqu'aux secours."},
+
+{id:1013,uc:'uc1',theme:'Secourisme',
+q:"Quel est le ratio compressions / insufflations du RCP adulte selon les recommandations actuelles ?",
+opts:["15 compressions / 2 insufflations","30 compressions / 2 insufflations","50 compressions / 5 insufflations","20 compressions / 1 insufflation"],
+c:1,e:"Le RCP adulte se pratique avec un ratio 30:2 (30 compressions thoraciques suivies de 2 insufflations). La fréquence des compressions doit être de 100 à 120/min, avec une dépression de 5 à 6 cm. Chez l'enfant de moins de 8 ans, le ratio est de 15:2 si deux sauveteurs sont présents."},
+
+{id:1014,uc:'uc1',theme:'Secourisme',
+q:"Qu'est-ce que le protocole RICE pour la prise en charge d'une entorse ?",
+opts:["Run, Ice, Compress, Elevate — recommandé uniquement pour les sportifs de haut niveau","Rest (repos), Ice (glace), Compression, Elevation — traitement immédiat des traumatismes","Rinse, Inject, Check, Examine — protocole médical avancé","Repeat, Intensify, Continue, Evaluate — méthode de réhabilitation"],
+c:1,e:"RICE = Rest (arrêt de l'activité), Ice (glace 15-20 min toutes les 2h dans les 48h), Compression (bandage pour limiter l'oedème), Elevation (membre surélevé pour faciliter le retour veineux). Ne jamais étirer une entorse aiguë. Orienter vers un médecin si douleur intense, instabilité ou impotence fonctionnelle totale."},
+
+{id:1015,uc:'uc1',theme:'Secourisme',
+q:"Un client présente des tremblements, sueurs froides, confusion et faiblesse soudaine pendant l'effort. Quel est le diagnostic probable et la CAT ?",
+opts:["Crampe musculaire → étirement et massage","Hypoglycémie → arrêt de l'effort, resucrage rapide (sucre, jus de fruit), appel au 15 si perte de conscience","Coup de chaleur → mettre sous l'air conditionné","Hyperventilation → lui demander de souffler dans un sac"],
+c:1,e:"Les signes d'hypoglycémie (glycémie < 0.70 g/L) sont : tremblements, sueurs, pâleur, sensation de faim, confusion, difficultés de concentration. CAT : arrêt de l'effort, resucrage avec 15g de glucides rapides (3 morceaux de sucre ou jus de fruit). Si conscient, contrôle glycémique. Si perte de conscience : appel 15, ne rien administrer par voie orale."},
+
+{id:1016,uc:'uc1',theme:'Secourisme',
+q:"Comment différencier un claquage musculaire d'une crampe ?",
+opts:["Le claquage survient au repos, la crampe à l'effort","Le claquage provoque une douleur aiguë soudaine pendant l'effort avec impotence fonctionnelle durable ; la crampe est une contraction douloureuse qui cède à l'étirement","Ils sont identiques, seule la localisation diffère","La crampe saigne, le claquage non"],
+c:1,e:"Le claquage (déchirure musculaire partielle ou totale) se manifeste par une douleur aiguë et soudaine ('coup de couteau'), une impotence fonctionnelle durable, un oedème possible, une contracture. CAT : RICE, immobilisation, pas d'étirement, consultation médicale. La crampe cède en 2-3 min à l'étirement doux et l'hydratation."},
+
+{id:1017,uc:'uc1',theme:'Secourisme',
+q:"Qu'est-ce que la Position Latérale de Sécurité (PLS) et quand l'utilise-t-on ?",
+opts:["Une position de gainage utilisée en rééducation","La position de récupération pour une personne inconsciente qui respire, pour éviter l'inhalation de vomissements","Une technique d'étirement des lombaires","La position de départ pour le RCP"],
+c:1,e:"La PLS s'applique à une personne INCONSCIENTE mais qui RESPIRE. Elle maintient les voies aériennes libres et prévient l'inhalation de vomissements. On ne fait PAS de RCP sur quelqu'un en PLS (il respire). Le RCP est réservé aux personnes inconscientes ET en apnée."},
+
+{id:1018,uc:'uc1',theme:'Secourisme',
+q:"Un client se plaint d'une douleur intense à la cuisse après un sprint, avec contracture visible. Quelle est votre première action ?",
+opts:["Étirer immédiatement le muscle pour décontracter","Appliquer de la chaleur pour détendre le muscle","Arrêter l'activité immédiatement, appliquer de la glace, orienter vers un médecin pour évaluation","Lui faire faire des pompes pour 'vider' le muscle"],
+c:2,e:"Face à un claquage suspecté : 1. Arrêt immédiat de l'effort. 2. Glace 15-20 min (protection peau). 3. Compression douce. 4. Élévation. 5. Orientation médicale pour confirmer le diagnostic par échographie et évaluer le grade de déchirure. JAMAIS d'étirement ni de chaleur dans les 48h : cela aggrave le saignement interne."},
+
+// ══ UC4 — Analyse ══
+{id:1019,uc:'uc4',theme:'Analyse & SWOT',
+q:"Dans une analyse SWOT, que représentent les Forces et les Faiblesses ?",
+opts:["Des facteurs externes au marché","Des facteurs internes à la structure (ressources, compétences, organisation)","Des données financières uniquement","Des objectifs à long terme"],
+c:1,e:"Forces et Faiblesses sont des facteurs INTERNES : ce que la salle fait bien ou mal par rapport à la concurrence (équipements, équipe, localisation, service, prix, notoriété). Opportunités et Menaces sont des facteurs EXTERNES : tendances du marché, concurrence, réglementation, démographie. Ce croisement permet d'identifier la stratégie la plus pertinente."},
+
+{id:1020,uc:'uc4',theme:'Analyse & SWOT',
+q:"Comment utiliser le SWOT pour justifier le choix d'un événement ?",
+opts:["Le SWOT sert uniquement à évaluer les concurrents","En montrant que l'événement exploite une Force pour saisir une Opportunité, ou compense une Faiblesse face à une Menace","Le SWOT est un outil financier qui n'a pas de lien avec les événements","En listant uniquement les points négatifs pour montrer les risques"],
+c:1,e:"La logique stratégique du SWOT : Forces × Opportunités = stratégie offensive (développement). Faiblesses × Opportunités = stratégie de rattrapage. Forces × Menaces = stratégie défensive. Faiblesses × Menaces = stratégie de survie. Le jury attend que tu justifies ton événement en croisant ces quadrants de manière cohérente."},
+
+{id:1021,uc:'uc4',theme:'Analyse & SWOT',
+q:"Qu'est-ce que la zone de chalandise d'une salle de fitness ?",
+opts:["La zone où le gérant a le droit d'ouvrir une salle selon son bail","La zone géographique d'où provient 80-90% de la clientèle actuelle ou potentielle","La zone couverte par le réseau WiFi de la salle","La zone où la publicité papier est distribuée"],
+c:1,e:"La zone de chalandise se découpe en 3 cercles : primaire (0-5 min, à pied/vélo = 60-70% des clients), secondaire (5-15 min en voiture = 20-25%), tertiaire (15-30 min = 5-10%). Son analyse combine : densité de population, CSP dominantes (INSEE), concurrents présents (SIRENE), flux de circulation."},
+
+{id:1022,uc:'uc4',theme:'Analyse & SWOT',
+q:"Quels outils permettent d'analyser la zone de chalandise et les concurrents ?",
+opts:["Uniquement les réseaux sociaux et Instagram","Google Maps, INSEE (données démographiques), SIRENE (recensement entreprises), Pages Jaunes","Excel et un tableau de bord interne","Uniquement des études de marché commandées à des agences"],
+c:1,e:"Google Maps : isochrones et repérage visuel des concurrents. INSEE/data.gouv.fr : données population, revenus, CSP par commune/IRIS. SIRENE : base officielle des entreprises (trouver tous les concurrents avec leur code NAF 9311Z pour les salles de sport). Pages Jaunes : informations complémentaires sur les concurrents (horaires, offres)."},
+
+// ══ UC4 — Stratégie commerciale ══
+{id:1023,uc:'uc4',theme:'Stratégie commerciale',
+q:"Qu'est-ce qu'un objectif SMART appliqué à un événement en salle ?",
+opts:["Un objectif vague et inspirant pour motiver l'équipe","Un objectif Spécifique, Mesurable, Atteignable, Réaliste, Temporel — exemple : recruter 15 nouveaux membres dans les 30 jours suivant l'événement","Un objectif uniquement financier","Un objectif défini après l'événement pour évaluer les résultats"],
+c:1,e:"SMART appliqué au fitness : S='Recruter de nouveaux membres dans la zone primaire', M='15 nouvelles inscriptions', A='réalisable avec notre capacité d'accueil', R='cohérent avec notre historique', T='dans les 30 jours suivant l'événement'. Les objectifs vagues ('augmenter notre notoriété') ne permettent pas d'évaluer le succès."},
+
+{id:1024,uc:'uc4',theme:'Stratégie commerciale',
+q:"Quelle est la différence entre fidélisation et acquisition client ?",
+opts:["Elles sont synonymes — les deux désignent l'action d'augmenter le CA","L'acquisition = trouver de nouveaux clients ; la fidélisation = faire revenir et maintenir les clients existants","L'acquisition est plus importante que la fidélisation dans le fitness","La fidélisation concerne uniquement les abonnements annuels"],
+c:1,e:"Règle marketing : acquérir un nouveau client coûte 5 à 7 fois plus cher que fidéliser un existant. Dans le fitness, le taux d'attrition (abandon) peut atteindre 30-40% par an. La fidélisation (suivi, bilan, événements exclusifs, programme de loyauté) est donc stratégiquement prioritaire mais les deux approches sont complémentaires."},
+
+{id:1025,uc:'uc4',theme:'Stratégie commerciale',
+q:"Qu'est-ce que le NPS (Net Promoter Score) et à quoi sert-il ?",
+opts:["Un indicateur boursier du secteur fitness","Un indice de satisfaction client basé sur la question 'De 0 à 10, recommanderiez-vous notre salle ?' — mesure la fidélité et la probabilité de prescription","Un score de performance physique des membres","Un ratio financier de rentabilité"],
+c:1,e:"NPS = % Promoteurs (score 9-10) − % Détracteurs (score 0-6). Un NPS > 50 est excellent. Un NPS positif signifie que tes membres sont tes meilleurs commerciaux (bouche-à-oreille). C'est l'indicateur le plus simple et le plus prédictif du taux de rétention à 12 mois. À mesurer après chaque événement et tous les 6 mois."},
+
+{id:1026,uc:'uc4',theme:'Stratégie commerciale',
+q:"Qu'est-ce qu'un persona client et pourquoi l'utiliser pour un événement ?",
+opts:["Un personnage fictif de jeu vidéo","Une représentation fictive mais réaliste d'un segment de clientèle cible, avec ses caractéristiques socio-démographiques, motivations et freins","Un contrat type utilisé par les salles de sport","Un système d'évaluation des coachs"],
+c:1,e:"Un persona = 'Marie, 34 ans, cadre, 2 enfants, veut perdre du poids après sa grossesse, manque de temps, cherche un suivi personnalisé proche de son bureau'. Construire 2-3 personas permet de cibler précisément la communication de l'événement (canal, message, timing), d'adapter l'offre et de maximiser le taux de conversion."},
+
+{id:1027,uc:'uc4',theme:'Stratégie commerciale',
+q:"Qu'est-ce que le coût d'acquisition client (CAC) et comment l'optimiser ?",
+opts:["Le coût de l'équipement par client","Le budget total marketing divisé par le nombre de nouveaux clients acquis — à minimiser en améliorant le ciblage et le taux de conversion","Le coût de la carte membre","Le coût de la formation des coachs par client suivi"],
+c:1,e:"CAC = Budget total campagne / Nombre de nouveaux clients acquis. Si tu dépenses 500€ et gagnes 10 membres : CAC = 50€. L'optimiser : améliorer le ciblage (moins de dépenses inutiles), augmenter le taux de conversion (meilleure offre d'essai), développer le parrainage (CAC quasi nul), et investir dans la fidélisation (réduction du churn)."},
+
+// ══ UC4 — Communication digitale ══
+{id:1028,uc:'uc4',theme:'Communication digitale',
+q:"Quel réseau social est le plus efficace pour promouvoir un événement fitness localement et pourquoi ?",
+opts:["Twitter/X car il touche un large public","Instagram et Facebook combinés : Instagram pour l'engagement organique (Reels, stories) + Facebook pour les événements et publicités géolocalisées ciblées","LinkedIn car les professionnels sont les plus actifs","TikTok uniquement pour toucher les moins de 18 ans"],
+c:1,e:"Instagram (engagement fort sur le visuel et les démos d'exercices, Reels très partagés) + Facebook (outil Événements, groupes locaux, publicités Meta Ads ciblables par rayon géographique de 5km, âge, intérêts). Google My Business est aussi indispensable pour le référencement local gratuit. La combinaison des 3 maximise la portée locale."},
+
+{id:1029,uc:'uc4',theme:'Communication digitale',
+q:"Qu'est-ce que le marketing par e-mail et quelle est sa valeur ajoutée pour une salle de fitness ?",
+opts:["Un spam interdit par la loi","Un outil de communication direct et personnalisé vers les membres existants ou prospects ayant consenti — fort taux de ROI et de fidélisation","Un outil réservé aux grandes franchises","Un outil remplacé entièrement par les réseaux sociaux"],
+c:1,e:"L'e-mail marketing a un ROI moyen de 40€ pour 1€ investi (DMA). Ses atouts : coût quasi nul, personnalisable, mesurable (taux d'ouverture, clics), segmentable (membres actifs vs inactifs vs prospects). Utilisation : newsletter mensuelle, relance abonnés silencieux, promotion d'événements, suivi post-inscription. Obligation légale : consentement RGPD préalable."},
+
+{id:1030,uc:'uc4',theme:'Communication digitale',
+q:"Pourquoi Google My Business est-il indispensable pour une salle de fitness ?",
+opts:["Pour vendre des abonnements directement en ligne","Pour apparaître dans les résultats de recherche locale ('salle de sport près de moi') gratuitement et collecter des avis clients","Pour gérer la comptabilité de la salle","Pour recruter des coachs en ligne"],
+c:1,e:"Google My Business optimisé permet d'apparaître dans le 'Local Pack' Google (les 3 premières salle affichées sur la carte). Éléments clés : photos à jour, horaires exacts, description avec mots-clés locaux, réponse à TOUS les avis (positifs et négatifs), posts d'événements. 80% des recherches fitness sont géolocalisées."},
+
+{id:1031,uc:'uc4',theme:'Communication digitale',
+q:"Qu'est-ce qu'un KPI et quels KPIs mesurer après un événement en salle ?",
+opts:["Un diplôme de coach sportif","Key Performance Indicator — indicateur de performance. Post-événement : nombre d'inscriptions, taux de conversion, CA généré, portée des posts, NPS","Un type d'abonnement premium","Un outil de gestion des plannings coachs"],
+c:1,e:"KPIs post-événement : Communication (portée totale, taux d'engagement, clics sur le lien d'inscription), Commercial (nb de prospects générés, taux conversion prospect→membre, CA additionnel, coût d'acquisition), Satisfaction (NPS, avis Google, questionnaire). Ces données permettent d'ajuster la stratégie pour le prochain événement."},
+
+// ══ UC4 — Fidélisation ══
+{id:1032,uc:'uc4',theme:'Fidélisation',
+q:"Qu'est-ce qu'un programme de parrainage et quel est son intérêt pour une salle de fitness ?",
+opts:["Un programme de formation pour les coachs","Un système où un membre existant recommande la salle à un proche et reçoit une récompense — coût d'acquisition très faible et client plus fidèle","Un programme d'affiliation avec des marques sportives","Un abonnement à tarif réduit pour les groupes"],
+c:1,e:"Le parrainage est l'outil d'acquisition le moins cher (coût = récompense uniquement) et le plus efficace (confiance du bouche-à-oreille). Le filleul a 4x plus de chances de rester qu'un client acquis via publicité. Mécanisme type : '1 mois offert au parrain pour tout nouveau membre inscrit'. À tracker : nb de filleuls/mois, taux de rétention filleuls vs autres canaux."},
+
+{id:1033,uc:'uc4',theme:'Fidélisation',
+q:"Qu'est-ce qu'un Welcome Pack et pourquoi améliore-t-il la fidélisation ?",
+opts:["Un pack de bienvenue physique vendu à l'inscription (t-shirt, shaker, guide)","Un ensemble de services offerts aux nouveaux membres (bilan initial, programme personnalisé, séance d'accueil) qui crée un engagement émotionnel fort dès le départ","Un abonnement de découverte à prix réduit","Un email automatique envoyé le jour de l'inscription"],
+c:1,e:"Le Welcome Pack réduit le taux d'abandon précoce (60% des abandons surviennent dans les 3 premiers mois). Il crée un sentiment d'appartenance et de suivi individualisé. Éléments types : bilan initial avec mesures, programme personnalisé, séance découverte offerte, présentation des coachs, intégration au groupe de suivi. Le ROI est élevé car il réduit l'attrition."},
+
+{id:1034,uc:'uc4',theme:'Fidélisation',
+q:"Comment utiliser les partenariats locaux pour développer la clientèle d'une salle ?",
+opts:["Les partenariats sont uniquement utiles pour les grandes franchises","En s'associant avec des médecins, kinés, entreprises locales (QVT), mutuelles, commerçants de la zone — chaque partenaire est un prescripteur potentiel","Les partenariats sont trop coûteux pour les petites salles","En achetant des espaces publicitaires dans les commerces locaux uniquement"],
+c:1,e:"Partenariats à haute valeur ajoutée : médecins/kinés (prescripteurs pour la reprise d'activité après blessure), entreprises locales (programmes bien-être QVT), mutuelles (remboursement partiel fitness), pharmacies (vitrine), associations sportives (cross-promotion). Chaque partenaire devient un canal d'acquisition qualifié et peu coûteux."},
+
+{id:1035,uc:'uc4',theme:'Fidélisation',
+q:"Qu'est-ce qu'un taux d'attrition (churn) et comment le réduire ?",
+opts:["Le taux de croissance du CA mensuel","Le taux d'abandon des membres sur une période donnée — à réduire via suivi personnalisé, relances proactives et programme de fidélité","Le taux de remplissage des cours collectifs","Le taux de conversion des essais en abonnements"],
+c:1,e:"Churn = nb membres ayant résilié / nb total membres × 100. Un churn de 3-5%/mois est la norme dans le fitness (soit 36-60%/an !). Leviers de réduction : bilan mensuel proactif, appel de relance après 2 semaines d'absence, programme de fidélité (récompenses à 3, 6, 12 mois), événements exclusifs membres, suivi digital entre les séances."},
+
+// ══ UC4 — Budget & ROI ══
+{id:1036,uc:'uc4',theme:'Budget & ROI',
+q:"Comment calculer le retour sur investissement (ROI) d'un événement marketing ?",
+opts:["ROI = Nombre de participants / Budget dépensé","ROI = (CA généré - Budget événement) / Budget événement × 100","ROI = Budget total / Nombre de posts publiés","ROI = Taux d'engagement Instagram / Coût de l'événement"],
+c:1,e:"Exemple : événement coûtant 300€ qui génère 10 nouveaux membres à 50€/mois = 500€/mois de CA récurrent. ROI = (500-300)/300 = 67% dès le 1er mois. Sur 12 mois si les membres restent : ROI = (6000-300)/300 = 1900%. Le jury attend que tu calcules un ROI prévisionnel et que tu défendes sa réalisme."},
+
+{id:1037,uc:'uc4',theme:'Budget & ROI',
+q:"Quelles sont les principales lignes d'un budget événementiel pour une salle de fitness ?",
+opts:["Uniquement la publicité digitale","Communication (flyers, Meta Ads, affiches), logistique (matériel, décoration, rafraîchissements), ressources humaines (coachs supplémentaires), goodies éventuels","Uniquement les coûts de personnel","Les coûts sont nuls si on utilise uniquement les réseaux sociaux gratuits"],
+c:1,e:"Budget type : Impression flyers/affiches (50-100€), Meta Ads géolocalisées (100-200€), goodies/récompenses (50-100€), rafraîchissements (30-50€), éventuel intervenant externe. Total indicatif : 200-500€ pour une petite salle. À mettre en regard des revenus attendus (nouvelles inscriptions × prix abonnement) pour calculer le ROI prévisionnel."},
+
+// ══ QUESTIONS MIXTES / PIÈGES ══
+{id:1038,uc:'uc1',theme:'Pièges & cas pratiques',
+q:"Un coach voit un extincteur vide mais continue à l'utiliser dans sa présentation ERP. Quel est le problème ?",
+opts:["Aucun, l'extincteur vide peut servir de décoration","C'est une infraction aux obligations ERP : l'extincteur doit être opérationnel, vérifié annuellement et consigné dans le registre de sécurité","C'est uniquement un problème esthétique","C'est la responsabilité du fabricant, pas du gérant"],
+c:1,e:"Un extincteur vide constitue une non-conformité aux obligations ERP. Les extincteurs doivent être vérifiés annuellement par un organisme agréé et rechargés/remplacés si nécessaires. La vérification doit être consignée dans le registre de sécurité. En cas d'incendie avec un extincteur non opérationnel, la responsabilité pénale du gérant peut être engagée."},
+
+{id:1039,uc:'uc1',theme:'Pièges & cas pratiques',
+q:"Un client refuse de signer un certificat médical de non contre-indication. Que faites-vous ?",
+opts:["Vous l'acceptez sans certificat car il a l'air en bonne santé","Vous refusez catégoriquement de l'encadrer","Vous lui faites signer une décharge de responsabilité mentionnant qu'il a été informé des risques, mais vous restez vigilant et excluez les exercices à risque élevé","Vous appelez son médecin traitant pour obtenir l'information"],
+c:2,e:"En l'absence de certificat médical, une décharge signée par le client atteste qu'il a été informé des risques. Cela réduit (sans éliminer) ta responsabilité. Tu dois cependant : réaliser un bilan de santé approfondi à l'oral, exclure les exercices à risque cardiovasculaire élevé, surveiller attentivement les signes de détresse pendant la séance."},
+
+{id:1040,uc:'uc4',theme:'Pièges & cas pratiques',
+q:"Un concurrent ouvre une salle low-cost à 200m. Comment réagir stratégiquement ?",
+opts:["Baisser immédiatement les prix pour s'aligner","Fermer la salle car la concurrence low-cost est imparable","Renforcer les avantages distinctifs (suivi personnalisé, communauté, coaching expert) et communiquer sur la valeur ajoutée — ne pas entrer dans une guerre des prix","Ignorer complètement la concurrence"],
+c:2,e:"La stratégie de différenciation est la seule viable face au low-cost. Les clients d'une salle indépendante ne cherchent pas le même service qu'une grande franchise : ils valorisent le suivi, la relation humaine, la flexibilité. Le positionnement doit être clair : 'Nous ne sommes pas une salle de machines, nous sommes un service de coaching'. Communiquer sur les résultats et témoignages membres."},
+
+{id:1041,uc:'uc1',theme:'Pièges & cas pratiques',
+q:"Lors de votre événement, un participant (non-membre) se blesse en utilisant un de vos équipements. Êtes-vous couvert ?",
+opts:["Non, seuls les membres sont couverts par votre assurance","Oui, votre RC pro couvre les tiers (visiteurs, participants à des événements) dans le cadre de votre activité professionnelle","Seulement si le participant a signé une décharge","Non, c'est la responsabilité de l'organisateur de l'événement, pas de la salle"],
+c:1,e:"La RC professionnelle couvre les dommages causés aux tiers dans le cadre de l'exercice de l'activité, y compris lors d'événements ouverts au public. Cependant, il faut vérifier que votre contrat d'assurance mentionne explicitement les 'événements ponctuels' — certaines polices les excluent ou nécessitent une déclaration préalable."},
+
+{id:1042,uc:'uc4',theme:'Pièges & cas pratiques',
+q:"Un membre vous laisse un avis Google négatif injuste. Quelle est la meilleure réponse ?",
+opts:["Ignorer l'avis car il est faux","Répondre agressivement pour défendre la salle","Répondre professionnellement, remercier pour le retour, apporter des clarifications factuelles et proposer un contact direct pour résoudre le problème","Demander à ses collègues de laisser des avis positifs pour noyer le négatif"],
+c:2,e:"Répondre à TOUS les avis (positifs et négatifs) est une obligation stratégique. Pour un avis négatif : 1. Remercier pour le retour. 2. S'excuser si nécessaire. 3. Apporter des faits si l'avis est inexact. 4. Proposer un contact direct. Cette réponse n'est pas pour le client mécontent (souvent irrécupérable) mais pour les 97% de futurs prospects qui liront l'échange."},
+
+// ══ QUESTIONS AVANCÉES ══
+{id:1043,uc:'uc1',theme:'Réglementation avancée',
+q:"Qu'est-ce que le DUERP et quelle est son obligation dans une salle de fitness ?",
+opts:["Document Unique d'Évaluation des Risques Professionnels — obligatoire dès le premier salarié, recense tous les risques professionnels et les mesures de prévention","Un contrat d'assurance spécifique au fitness","Un document de suivi des performances des coachs","Un document comptable annuel"],
+c:0,e:"Le DUERP est obligatoire dès l'embauche du 1er salarié (Code du travail). Il recense tous les risques pour la santé et la sécurité des travailleurs (chutes, charges lourdes, bruit, risques biologiques...) et les mesures de prévention associées. Il doit être mis à jour annuellement ou après tout accident. Son absence expose l'employeur à des sanctions pénales."},
+
+{id:1044,uc:'uc1',theme:'Réglementation avancée',
+q:"Qu'est-ce que le Code du sport L212-1 et quel est son impact sur l'exercice du coaching ?",
+opts:["Un article qui fixe les prix des abonnements sportifs","L'article qui encadre l'enseignement des APS contre rémunération : obligation de détenir un diplôme reconnu par l'État (ou équivalence) pour encadrer contre rémunération","Un article sur la sécurité des équipements sportifs","Un article sur le droit à l'image des sportifs"],
+c:1,e:"L'article L212-1 du Code du sport conditionne l'encadrement rémunéré d'APS à la détention d'un diplôme reconnu. Pour le fitness : CQP IF, BPJEPS AF, BEES MDF, DEUST MDF ou équivalent européen EREPS. Exercer sans diplôme = exercice illégal passible de poursuites pénales (2 ans d'emprisonnement, 30 000€ d'amende)."},
+
+{id:1045,uc:'uc4',theme:'Stratégie avancée',
+q:"Qu'est-ce que l'USP (Unique Selling Proposition) d'une salle de fitness et comment la définir ?",
+opts:["Le prix unique affiché en vitrine","La proposition de valeur unique qui différencie la salle de ses concurrents et répond à un besoin non satisfait dans sa zone de chalandise","La liste des équipements disponibles","Le nom commercial de la salle"],
+c:1,e:"L'USP répond à 'Pourquoi choisir ma salle plutôt qu'une autre ?'. Exemples : 'La seule salle de Lyon spécialisée dans le coaching post-partum' / 'Coaching 1-to-1 avec bilan mensuel inclus dans l'abonnement' / 'Salle ouverte 24h/24 avec accès badge'. L'USP doit être mémorisable, vérifiable et valorisante pour la cible choisie."},
+
+{id:1046,uc:'uc4',theme:'Stratégie avancée',
+q:"Quelle est la différence entre communication push et pull dans le contexte d'une salle de fitness ?",
+opts:["Push = communication digitale, Pull = communication physique","Push = aller vers le prospect (publicité, flyers, phoning) ; Pull = attirer le prospect vers soi (SEO, réseaux sociaux, bouche-à-oreille, avis Google)","Elles sont identiques","Push = communication interne, Pull = communication externe"],
+c:1,e:"Push : tu vas chercher le client (Meta Ads ciblées, distribution flyers, SMS). Coût variable, résultats immédiats mais dès que tu arrêtes de payer, le flux s'arrête. Pull : le client te trouve (SEO, Google My Business, Instagram organique, bouche-à-oreille). Coût nul ou faible, effets à long terme, plus qualitatif. La stratégie optimale combine les deux."},
+
+{id:1047,uc:'uc1',theme:'Réglementation avancée',
+q:"Quelle est la durée de validité d'un certificat médical de non contre-indication pour la pratique sportive ?",
+opts:["6 mois","1 an","3 ans","Illimitée, un seul certificat suffit à vie"],
+c:1,e:"La durée de validité est de 1 an pour la plupart des pratiques sportives de loisir. Pour les licences fédérales, la durée peut varier selon la fédération (souvent 1 an). Pour les compétitions et certaines disciplines à risque, un certificat spécifique peut être requis. Le coach doit vérifier la date de validité lors de la prise en charge de tout nouveau client."},
+
+{id:1048,uc:'uc4',theme:'Stratégie avancée',
+q:"Comment structurer un plan d'action correctif si l'événement n'atteint pas ses objectifs commerciaux ?",
+opts:["Annuler l'événement et rembourser les participants","Attendre le prochain événement sans rien changer","Analyser les écarts (prévu vs réalisé), identifier les causes racines, mettre en place des actions correctrices (offre de suivi, relance personnalisée, offre spéciale limitée) et ajuster la stratégie du prochain événement","Augmenter le budget publicitaire sans analyse"],
+c:2,e:"La démarche PDCA (Plan-Do-Check-Act) : 1. Mesurer l'écart entre objectifs et résultats. 2. Identifier les causes (mauvais ciblage ? Offre peu attractive ? Timing ? Météo ?). 3. Actions correctrices immédiates (call de relance à J+7, offre découverte aux participants non-convertis, témoignages à valoriser). 4. Intégrer les apprentissages pour l'événement suivant. Le jury valorise cette posture d'amélioration continue."},
+];
+
+// ══ FICHES ══
+const FICHES = [
+  {t:'Circuit — 5 ateliers',ic:'🏋️',rows:[
+    ['Atelier 1','Goblet Squat (KB) — Squat · Quadriceps, fessiers, IJ, core'],
+    ['Atelier 2','Romanian Deadlift — Charnière · IJ, fessiers, érecteurs'],
+    ['Atelier 3','Push-up — Poussé · Pectoraux, deltoïdes ant., triceps'],
+    ['Atelier 4','TRX Row — Tiré · Grand dorsal, rhomboïdes, biceps'],
+    ['Atelier 5','Planche Dynamique — Gainage · Core global, épaules, fessiers'],
+    ['Script démo','1 min/atelier, cue verbal pendant l'exécution, buffer 35'''],
+  ]},
+  {t:'Profils — Mémo rapide',ic:'🩺',rows:[
+    ['Simone 63F','Cardio-vasculaire en priorité, push-up genoux, ton bienveillant'],
+    ['Jean 51H','Épaule ! Goblet squat pour apprendre, expliquer le pourquoi'],
+    ['Dominique 64H','Genou : amplitude contrôlée, objectif = la moto'],
+    ['Didier 55H','Débutant dos, dos neutre RDL, analogies du quotidien'],
+    ['Duncan 47H','Bilan CV obligatoire (fumeur), lier à la performance moto'],
+    ['Stéphane 52H','Volume total foot+muscu, séance = exutoire du stress'],
+    ['Manuel 66H','Genoux+dos, planche > crunchs, ancrer dans les petits-enfants'],
+    ['Madeleine 68F','Épaules ! TRX Row adapté, planche genoux, bienveillance++'],
+    ['Thilaï 23F','Genou droit : surveiller l'alignement, parler d'identité sportive'],
+    ['Inès 21F','Cyphose : TRX Row rétraction prioritaire, lier à la danse'],
+    ['Sarah 24F','Surentraînement : méthode socratique, squeeze fessiers sur RDL'],
+    ['Isabelle 43F','Coudes (appui poings), espace sécurisant, 0 pression perf'],
+  ]},
+  {t:'ERP & Réglementation',ic:'🏢',rows:[
+    ['Type ERP','Type X — établissements sportifs couverts'],
+    ['Catégories','5 catégories selon effectif — petites salles = 4ème/5ème'],
+    ['Registre sécurité','Obligatoire : extincteurs, DEA, exercices évacuation'],
+    ['DEA','Obligatoire depuis le décret du 4 mai 2007'],
+    ['Commission sécurité','Tous les 5 ans (4ème-5ème) ou 3 ans (1ère-3ème)'],
+    ['BAES','Éclairage secours autonome 1h min — vérif. mensuelle'],
+    ['DUERP','Obligatoire dès 1er salarié — MAJ annuelle'],
+    ['L212-1','Exercice illégal = 2 ans emprisonnement + 30k€ amende'],
+    ['RC pro','Obligatoire — déclaration accident sous 5 jours ouvrés'],
+    ['Cert. médical','Validité 1 an — décharge si refus + bilan oral approfondi'],
+  ]},
+  {t:'Secourisme — Protocoles',ic:'🚑',rows:[
+    ['RCP ratio','30 compressions / 2 insufflations, 100-120/min, 5-6 cm'],
+    ['PLS','Inconscient qui RESPIRE — NE PAS faire RCP'],
+    ['RICE','Rest, Ice (15-20 min), Compression, Elevation'],
+    ['Hypoglycémie','15g glucides rapides — appel 15 si perte de conscience'],
+    ['Claquage','Arrêt + RICE + médecin — JAMAIS d'étirement ni chaleur 48h'],
+  ]},
+  {t:'Marketing & Communication',ic:'📊',rows:[
+    ['SWOT','Forces/Faiblesses (internes) + Opportunités/Menaces (externes)'],
+    ['Zone chalandise','Primaire 0-5min, secondaire 5-15min, tertiaire 15-30min'],
+    ['Outils analyse','Google Maps, INSEE, SIRENE (code NAF 9311Z)'],
+    ['SMART','Spécifique, Mesurable, Atteignable, Réaliste, Temporel'],
+    ['Instagram','1 post/jour, Reels, Stories — engagement organique'],
+    ['Facebook','Événements + Meta Ads géolocalisées (rayon 5km)'],
+    ['Google My Biz','SEO local gratuit — répondre à TOUS les avis'],
+    ['Email marketing','ROI 40€/1€ — consentement RGPD obligatoire'],
+    ['NPS','% Promoteurs (9-10) − % Détracteurs (0-6)'],
+    ['CAC','Budget campagne / Nb nouveaux clients acquis'],
+    ['ROI','(CA généré − Budget) / Budget × 100'],
+    ['Churn','3-5%/mois — réduire via bilan mensuel + relances'],
+  ]},
+];
+
+// ══ STATE ══
+const G = {
+  mod:'', sub:'all', pool:[], cur:0, score:0,
+  hist:[], errors:[], answered:false
 };
 
-function loadState() {
+const ALL_Q = [
+  ...ANAM_Q.map(q=>({...q, mod:'anam'})),
+  ...UC_Q
+];
+
+function loadS() {
   try {
-    const saved = localStorage.getItem('cqp_anam_state');
-    if (saved) {
-      const s = JSON.parse(saved);
-      state.errors = s.errors || [];
-      document.getElementById('statBest').textContent = s.best !== undefined ? s.best + '%' : '—';
-    }
-  } catch(e) {}
+    const sv = JSON.parse(localStorage.getItem('cqp_hub')||'{}');
+    G.errors = sv.errors || [];
+    const best = sv.best !== undefined ? sv.best+'%' : '—';
+    document.getElementById('gbest').textContent = best;
+    document.getElementById('gerr').textContent = G.errors.length;
+    document.getElementById('errPill').textContent = G.errors.length > 0 ? G.errors.length+' erreurs' : '0 erreur';
+  } catch(e){}
 }
 
-function saveState(score, total) {
+function saveS(score, total) {
   try {
     const pct = Math.round(score/total*100);
-    const saved = JSON.parse(localStorage.getItem('cqp_anam_state') || '{}');
-    const best = Math.max(saved.best || 0, pct);
-    localStorage.setItem('cqp_anam_state', JSON.stringify({
-      best, errors: state.errors
-    }));
-    document.getElementById('statBest').textContent = best + '%';
-  } catch(e) {}
+    const old = JSON.parse(localStorage.getItem('cqp_hub')||'{}');
+    const best = Math.max(old.best||0, pct);
+    localStorage.setItem('cqp_hub', JSON.stringify({best, errors:G.errors}));
+    document.getElementById('gbest').textContent = best+'%';
+    document.getElementById('gerr').textContent = G.errors.length;
+    document.getElementById('errPill').textContent = G.errors.length > 0 ? G.errors.length+' erreurs' : '0 erreur';
+  } catch(e){}
 }
 
-// ─── NAVIGATION ──────────────────────────────────────────────
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+function show(id) {
+  document.querySelectorAll('.sc').forEach(s=>s.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
 }
 
-function showModeScreen() {
-  showScreen('screenMode');
-  document.getElementById('headerScore').style.display = 'none';
+function goHub() {
+  document.getElementById('ht').textContent = 'CQP IF — Préparation MPT';
+  document.getElementById('hs').textContent = 'Choisir un module';
+  document.getElementById('hic').textContent = '🏋️';
+  document.getElementById('sb').style.display = 'none';
+  loadS();
+  show('shub');
 }
 
-// ─── MODE SELECT ──────────────────────────────────────────────
-function selectMode(el, mode) {
-  document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('selected'));
-  el.classList.add('selected');
-  state.mode = mode;
-}
-
-function startQuiz() {
-  let pool = [];
-  if (state.mode === 'all') {
-    pool = shuffle([...QUESTIONS]);
-  } else if (state.mode === 'random10') {
-    pool = shuffle([...QUESTIONS]).slice(0, 10);
-  } else if (state.mode === 'errors') {
-    const errorIds = state.errors;
-    pool = shuffle(QUESTIONS.filter(q => errorIds.includes(q.id)));
-    if (pool.length === 0) {
-      alert('Aucune erreur enregistrée. Lance d\'abord un quiz complet !');
-      return;
-    }
+function shuffle(a) {
+  for(let i=a.length-1;i>0;i--) {
+    const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];
   }
-  state.questions = pool;
-  state.current = 0;
-  state.score = 0;
-  state.answered = false;
-  state.history = [];
-  document.getElementById('headerScore').style.display = 'block';
-  showScreen('screenQuiz');
-  renderQuestion();
+  return a;
 }
 
-// ─── QUIZ LOGIC ───────────────────────────────────────────────
-function shuffle(arr) {
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
+// ══ MODULE SÉLECTION ══
+const MOD_CFG = {
+  anam:{t:'Anamnèse — Épreuve 2',s:'Questions clés par profil · Adaptations circuit · Ton pédagogique',ic:'🩺',
+    domains:[
+      {k:'all',ic:'🎯',t:'Tout — 12 profils',s:'36 questions mélangées',full:true},
+      {k:'t_anam',ic:'🩺',t:'Anamnèse pure',s:'Questions à poser au client'},
+      {k:'t_adapt',ic:'⚙️',t:'Adaptation circuit',s:'Charges, variantes, modifications'},
+      {k:'t_peda',ic:'🗣️',t:'Pédagogie',s:'Ton, langage, posture coach'},
+      {k:'err',ic:'❌',t:'Mes erreurs',s:'Questions ratées uniquement',full:true},
+    ]},
+  uc1:{t:'UC1 — Sécurité & Réglementation',s:'ERP · Responsabilité civile & pénale · Secourisme',ic:'🔒',
+    domains:[
+      {k:'all',ic:'🎯',t:'Tout UC1',s:'18 questions',full:true},
+      {k:'t_erp',ic:'🏢',t:'ERP & Réglementation',s:'Obligations, catégories, DEA, DUERP'},
+      {k:'t_resp',ic:'⚖️',t:'Responsabilité',s:'Civile, pénale, RC pro'},
+      {k:'t_sec',ic:'🚑',t:'Secourisme',s:'RCP, RICE, PLS, traumatologies'},
+      {k:'err',ic:'❌',t:'Mes erreurs',s:'Questions ratées uniquement',full:true},
+    ]},
+  uc4:{t:'UC4 — Marketing & Communication',s:'SWOT · Chalandise · Fidélisation · Digital · ROI',ic:'📈',
+    domains:[
+      {k:'all',ic:'🎯',t:'Tout UC4',s:'30 questions',full:true},
+      {k:'t_swot',ic:'📊',t:'Analyse & SWOT',s:'Zone de chalandise, personas'},
+      {k:'t_strat',ic:'🎯',t:'Stratégie commerciale',s:'SMART, NPS, fidélisation, CAC'},
+      {k:'t_digital',ic:'📱',t:'Communication',s:'Réseaux sociaux, e-mail, KPIs'},
+      {k:'t_event',ic:'🎉',t:'Dossier événementiel',s:'Trame, budget, oral jury'},
+      {k:'err',ic:'❌',t:'Mes erreurs',s:'Questions ratées',full:true},
+    ]},
+  all:{t:'Quiz complet',s:'Tous les modules mélangés',ic:'🔀',
+    domains:[{k:'all',ic:'🔀',t:'84 questions',s:'Anamnèse + UC1 + UC4',full:true},{k:'err',ic:'❌',t:'Mes erreurs',s:'',full:true}]},
+  err:{t:'Mes erreurs',s:'Questions ratées — tous modules',ic:'❌',
+    domains:[{k:'all',ic:'❌',t:'Toutes mes erreurs',s:'',full:true}]},
+};
+
+function openMod(mod) {
+  G.mod = mod; G.sub = 'all';
+  const cfg = MOD_CFG[mod] || MOD_CFG.all;
+  document.getElementById('ht').textContent = cfg.t;
+  document.getElementById('hs').textContent = cfg.s;
+  document.getElementById('hic').textContent = cfg.ic;
+  document.getElementById('sb').style.display = 'none';
+  document.getElementById('modtit').textContent = cfg.t;
+  document.getElementById('modsub').textContent = cfg.s;
+  const grid = document.getElementById('dgrid');
+  grid.innerHTML = '';
+  cfg.domains.forEach(d => {
+    const el = document.createElement('div');
+    el.className = 'dc' + (d.full?' full':'') + (d.k==='all'?' sel':'');
+    el.onclick = () => { document.querySelectorAll('.dc').forEach(c=>c.classList.remove('sel')); el.classList.add('sel'); G.sub=d.k; };
+    el.innerHTML = `<div class="dc-ic">${d.ic}</div><div class="dc-t">${d.t}</div><div class="dc-s">${d.s}</div>`;
+    grid.appendChild(el);
+  });
+  show('smod');
+}
+
+function buildPool() {
+  const mod = G.mod, sub = G.sub;
+  if(sub === 'err' || mod === 'err') {
+    const p = shuffle(ALL_Q.filter(q=>G.errors.includes(q.id)));
+    if(!p.length){alert('Aucune erreur enregistrée !');return null;}
+    return p;
   }
-  return arr;
+  const themeMap = {
+    t_anam:'Anamnèse', t_adapt:'Adaptation circuit', t_peda:'Pédagogie',
+    t_erp:'ERP', t_resp:'Responsabilité', t_sec:'Secourisme',
+    t_swot:'Analyse & SWOT', t_strat:'Stratégie commerciale',
+    t_digital:'Communication digitale', t_event:'Dossier événementiel',
+  };
+  let pool;
+  if(mod==='anam')       pool = [...ANAM_Q];
+  else if(mod==='uc1')   pool = UC_Q.filter(q=>q.uc==='uc1');
+  else if(mod==='uc4')   pool = UC_Q.filter(q=>q.uc==='uc4');
+  else                   pool = [...ALL_Q];
+  if(sub !== 'all' && themeMap[sub]) pool = pool.filter(q=>q.theme===themeMap[sub]);
+  return shuffle(pool);
 }
 
-function renderQuestion() {
-  const q = state.questions[state.current];
-  const total = state.questions.length;
+function startQ() {
+  const pool = buildPool();
+  if(!pool||!pool.length){alert('Aucune question pour ce filtre.');return;}
+  G.pool=pool; G.cur=0; G.score=0; G.hist=[]; G.answered=false;
+  document.getElementById('sb').style.display='block';
+  show('squiz'); renderQ();
+}
 
-  // Progress
-  const pct = (state.current / total) * 100;
-  document.getElementById('progressFill').style.width = pct + '%';
-  document.getElementById('qCounter').textContent = `Question ${state.current + 1} / ${total}`;
-
-  // Score header
-  document.getElementById('headerScoreVal').textContent = `${state.score}/${state.current}`;
-
-  // Profil card
-  const tagsHtml = q.tags.map((t,i) =>
-    `<span class="tag tag-${q.tagTypes[i]}">${t}</span>`
-  ).join('');
-  document.getElementById('profilCard').innerHTML = `
-    <div class="profil-header">
-      <div class="profil-avatar">${q.profil.charAt(0)}</div>
+function renderQ() {
+  const q=G.pool[G.cur], n=G.pool.length;
+  document.getElementById('pf').style.width=(G.cur/n*100)+'%';
+  document.getElementById('qn').textContent=`${G.cur+1}/${n}`;
+  document.getElementById('sb').textContent=`${G.score}/${G.cur}`;
+  const tg=document.getElementById('qtg');
+  const mod=q.mod||q.uc||'anam';
+  tg.textContent=(mod==='anam'?'Anamnèse':mod.toUpperCase())+' — '+(q.theme||'');
+  tg.className='qtag tg-'+mod;
+  let ch='';
+  if(q.profil){
+    const tc={blue:'pt-b',orange:'pt-o',green:'pt-g',red:'pt-r'};
+    const tags=(q.tags||[]).map((t,i)=>`<span class="pt ${tc[q.tagC?q.tagC[i]:'blue']}">${t}</span>`).join('');
+    ch=`<div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem">
+      <div class="pav">${q.profil.charAt(0)}</div>
       <div>
-        <div class="profil-name">${q.profil} <span style="font-size:.75rem;color:var(--muted);font-weight:400">#${q.num}</span></div>
-        <div class="profil-meta">${q.sexe === 'F' ? 'Femme' : 'Homme'} · ${q.age} ans · ${q.poids} kg / ${q.taille} cm · ${q.profession}</div>
+        <div style="font-weight:700;font-size:1rem">${q.profil} <span style="font-size:.7rem;color:var(--mu);font-weight:400">#${q.num||''}</span></div>
+        <div style="font-size:.7rem;color:var(--mu)">${q.sexe==='F'?'Femme':'Homme'} · ${q.age} ans · ${q.poids}kg / ${q.taille}cm · ${q.prof||''}</div>
+        <div class="ptags">${tags}</div>
       </div>
     </div>
-    <div class="profil-tags">${tagsHtml}</div>
-    <div class="profil-context"><b>Objectif :</b> ${q.objectif}<br/><span style="color:var(--small)">${q.contexte}</span></div>
-  `;
-
-  // Question
-  document.getElementById('questionText').textContent = q.question;
-
-  // Options
-  const letters = ['A','B','C','D'];
-  const container = document.getElementById('optionsContainer');
-  container.innerHTML = '';
-  q.options.forEach((opt, i) => {
-    const btn = document.createElement('button');
-    btn.className = 'option';
-    btn.innerHTML = `<span class="opt-letter">${letters[i]}</span><span>${opt}</span>`;
-    btn.onclick = () => selectAnswer(i);
-    container.appendChild(btn);
-  });
-
-  // Reset
-  document.getElementById('explanation').style.display = 'none';
-  document.getElementById('explanation').classList.remove('visible');
-  document.getElementById('btnNext').classList.remove('visible');
-  state.answered = false;
-}
-
-function selectAnswer(idx) {
-  if (state.answered) return;
-  state.answered = true;
-
-  const q = state.questions[state.current];
-  const opts = document.querySelectorAll('.option');
-  opts.forEach(o => o.disabled = true);
-
-  const isCorrect = idx === q.correct;
-  if (isCorrect) {
-    state.score++;
-    opts[idx].classList.add('correct');
-    // Remove from errors if was there
-    state.errors = state.errors.filter(id => id !== q.id);
+    <div class="ctx"><b>Objectif :</b> ${q.obj||''}<br/><span style="color:var(--sm)">${q.ctx||''}</span></div>
+    <div style="border-top:1px solid var(--bd);padding-top:.75rem;margin-top:.75rem" class="qt">${q.q}</div>`;
   } else {
-    opts[idx].classList.add('wrong');
-    opts[q.correct].classList.add('reveal-correct');
-    // Add to errors
-    if (!state.errors.includes(q.id)) state.errors.push(q.id);
+    ch=`<div class="qt">${q.q}</div>`;
   }
-
-  state.history.push({
-    q, selectedIdx: idx, isCorrect
+  document.getElementById('qcard').innerHTML=ch;
+  const L=['A','B','C','D'];
+  const cont=document.getElementById('opts');
+  cont.innerHTML='';
+  q.opts.forEach((o,i)=>{
+    const b=document.createElement('button');
+    b.className='op';
+    b.innerHTML=`<span class="ol">${L[i]}</span><span>${o}</span>`;
+    b.onclick=()=>ansQ(i);
+    cont.appendChild(b);
   });
-
-  // Explanation
-  const exp = document.getElementById('explanation');
-  exp.innerHTML = `<strong>${isCorrect ? '✅ Correct !' : '❌ Incorrect.'}</strong> ${q.explanation}`;
-  exp.style.display = 'block';
-  exp.classList.add('visible');
-
-  document.getElementById('btnNext').classList.add('visible');
-  document.getElementById('headerScoreVal').textContent = `${state.score}/${state.current + 1}`;
+  document.getElementById('expl').className='expl';
+  document.getElementById('bnxt').className='bnxt';
+  G.answered=false;
 }
 
-function nextQuestion() {
-  state.current++;
-  if (state.current >= state.questions.length) {
-    showResults();
-  } else {
-    renderQuestion();
-  }
+function ansQ(idx) {
+  if(G.answered)return;
+  G.answered=true;
+  const q=G.pool[G.cur];
+  document.querySelectorAll('.op').forEach(o=>o.disabled=true);
+  const ok=idx===q.c;
+  const ops=document.querySelectorAll('.op');
+  if(ok){G.score++;ops[idx].classList.add('ok');G.errors=G.errors.filter(id=>id!==q.id);}
+  else{ops[idx].classList.add('ko');ops[q.c].classList.add('rv');if(!G.errors.includes(q.id))G.errors.push(q.id);}
+  G.hist.push({q,sel:idx,ok});
+  const ex=document.getElementById('expl');
+  ex.innerHTML=`<strong>${ok?'✅ Correct !':'❌ Incorrect.'}</strong> ${q.e}`;
+  ex.className='expl on';
+  document.getElementById('bnxt').className='bnxt on';
+  document.getElementById('sb').textContent=`${G.score}/${G.cur+1}`;
 }
 
-// ─── RESULTS ─────────────────────────────────────────────────
-function showResults() {
-  const total = state.questions.length;
-  const pct = Math.round(state.score / total * 100);
-  saveState(state.score, total);
+function nextQ() {
+  G.cur++;
+  if(G.cur>=G.pool.length) showRes();
+  else renderQ();
+}
 
-  let colorClass = pct >= 80 ? 'score-green' : pct >= 60 ? 'score-orange' : 'score-red';
-  let msg = pct >= 80 ? '🔥 Excellent niveau — tu es prêt pour l\'épreuve 2 !'
-    : pct >= 60 ? '💪 Bon travail, encore quelques profils à consolider'
-    : '📚 Reprends les profils les plus difficiles avec le mode "Mes erreurs"';
-
-  document.getElementById('resultScore').innerHTML = `<span class="${colorClass}">${pct}%</span>`;
-  document.getElementById('resultTotal').textContent = `${state.score} bonnes réponses sur ${total}`;
-  document.getElementById('resultMsg').textContent = msg;
-
-  // Review list
-  const list = document.getElementById('reviewList');
-  list.innerHTML = '';
-  state.history.forEach((h, i) => {
-    const letters = ['A','B','C','D'];
-    const div = document.createElement('div');
-    div.className = `review-item ${h.isCorrect ? 'ok' : 'ko'}`;
-    div.innerHTML = `
-      <div class="review-profil">Profil ${h.q.num} — ${h.q.profil}</div>
-      <div class="review-q">${h.q.question}</div>
-      <div class="review-answer ${h.isCorrect ? 'ok' : 'ko'}">
-        ${h.isCorrect ? '✅' : '❌'} Tu as choisi : ${letters[h.selectedIdx]}. ${h.q.options[h.selectedIdx]}
-      </div>
-      ${!h.isCorrect ? `<div class="review-correct">✅ Correct : ${letters[h.q.correct]}. ${h.q.options[h.q.correct]}</div>` : ''}
-    `;
-    list.appendChild(div);
+function showRes() {
+  const n=G.pool.length, pct=Math.round(G.score/n*100);
+  saveS(G.score,n);
+  const cls=pct>=80?'sg':pct>=60?'so':'sr';
+  document.getElementById('rpct').innerHTML=`<span class="${cls}">${pct}%</span>`;
+  document.getElementById('rsub').textContent=`${G.score} / ${n} bonnes réponses`;
+  document.getElementById('rmsg').textContent=pct>=80?'🔥 Prêt pour le jury !':pct>=60?'💪 Quelques points à consolider':'📚 Reprends les fiches de révision';
+  const byD={};
+  G.hist.forEach(h=>{
+    const k=h.q.mod==='anam'?'Anamnèse':(h.q.uc||h.q.mod||'?').toUpperCase();
+    if(!byD[k])byD[k]={ok:0,n:0};
+    byD[k].n++;if(h.ok)byD[k].ok++;
   });
-
-  document.getElementById('headerScore').style.display = 'none';
-  showScreen('screenResults');
-}
-
-// ─── REVIEW PROFILS ──────────────────────────────────────────
-function showReview() {
-  const profilsUniq = {};
-  QUESTIONS.forEach(q => {
-    if (!profilsUniq[q.profil]) profilsUniq[q.profil] = q;
+  const drg=document.getElementById('drg');drg.innerHTML='';
+  Object.entries(byD).forEach(([k,d])=>{
+    const p=Math.round(d.ok/d.n*100);
+    const c=p>=80?'var(--grl)':p>=60?'#fb923c':'var(--rdl)';
+    drg.innerHTML+=`<div class="drc"><div style="font-size:.7rem;color:var(--mu);margin-bottom:.25rem">${k}</div><div class="drs" style="color:${c}">${p}%</div><div style="font-size:.65rem;color:var(--mu)">${d.ok}/${d.n}</div></div>`;
   });
-
-  const container = document.getElementById('reviewProfilsList');
-  container.innerHTML = '';
-
-  Object.values(profilsUniq).forEach(q => {
-    const tagsHtml = q.tags.map((t,i) =>
-      `<span class="tag tag-${q.tagTypes[i]}">${t}</span>`
-    ).join('');
-
-    const allQ = QUESTIONS.filter(x => x.profil === q.profil);
-
-    let qHtml = allQ.map(x => `
-      <div style="margin-top:.75rem;padding-top:.75rem;border-top:1px solid var(--border)">
-        <div style="font-size:.78rem;font-weight:600;margin-bottom:.4rem">${x.question}</div>
-        ${x.options.map((o,i) => `
-          <div style="font-size:.72rem;padding:.25rem .5rem;border-radius:4px;margin-bottom:.2rem;background:${i===x.correct?'var(--green-dim)':'var(--surface2)'};color:${i===x.correct?'#bbf7d0':'var(--muted)'}">
-            ${['A','B','C','D'][i]}. ${o} ${i===x.correct?'✅':''}
-          </div>
-        `).join('')}
-        <div style="font-size:.7rem;color:var(--muted);margin-top:.4rem;font-style:italic">${x.explanation}</div>
-      </div>
-    `).join('');
-
-    const div = document.createElement('div');
-    div.style.cssText = 'background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:.75rem;overflow:hidden';
-    div.innerHTML = `
-      <div style="background:var(--blue-dim);padding:.75rem 1rem;cursor:pointer;display:flex;align-items:center;justify-content:space-between" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'">
-        <div>
-          <span style="font-weight:700;font-size:.9rem">${q.profil}</span>
-          <span style="font-size:.75rem;color:var(--muted);margin-left:.5rem">#${q.num} · ${q.sexe==='F'?'F':'H'} · ${q.age} ans · ${q.profession}</span>
-          <div style="margin-top:.4rem">${tagsHtml}</div>
-        </div>
-        <span style="color:var(--muted);font-size:.8rem">▼</span>
-      </div>
-      <div style="display:none;padding:.75rem 1rem">
-        <div style="font-size:.78rem;color:var(--muted);margin-bottom:.5rem"><b>Objectif :</b> ${q.objectif}</div>
-        <div style="font-size:.75rem;color:var(--small)">${q.contexte}</div>
-        ${qHtml}
-      </div>
-    `;
-    container.appendChild(div);
+  const L=['A','B','C','D'];
+  const rl=document.getElementById('rlist');rl.innerHTML='';
+  G.hist.forEach(h=>{
+    const div=document.createElement('div');
+    div.className=`ritem ${h.ok?'ok':'ko'}`;
+    const dom=h.q.mod==='anam'?'Anamnèse':(h.q.uc||'?').toUpperCase();
+    div.innerHTML=`<div class="rdom">${dom} — ${h.q.theme||''}</div>
+    <div class="rq">${h.q.q}</div>
+    <div class="rans ${h.ok?'ok':'ko'}">${h.ok?'✅':'❌'} ${L[h.sel]}. ${h.q.opts[h.sel]}</div>
+    ${!h.ok?`<div class="rcor">✅ ${L[h.q.c]}. ${h.q.opts[h.q.c]}</div>`:''}`;
+    rl.appendChild(div);
   });
-
-  showScreen('screenReview');
+  document.getElementById('sb').style.display='none';
+  show('sres');
 }
 
-// ─── INIT ────────────────────────────────────────────────────
-document.getElementById('statQuestions').textContent = QUESTIONS.length;
-loadState();
-
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js').catch(() => {});
+// ══ FICHES ══
+function openFiches() {
+  document.getElementById('ht').textContent='Fiches de révision';
+  document.getElementById('hs').textContent='';
+  const fl=document.getElementById('flist');fl.innerHTML='';
+  FICHES.forEach((f,i)=>{
+    const rows=f.rows.map(r=>`<div class="frow"><div class="flbl">${r[0]}</div><div class="fval">${r[1]}</div></div>`).join('');
+    const div=document.createElement('div');
+    div.className='fsec';
+    div.innerHTML=`<div class="fhd" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='block'?'none':'block'">
+      <span class="fht">${f.ic} ${f.t}</span><span style="color:var(--mu)">▼</span>
+    </div><div class="fbody">${rows}</div>`;
+    fl.appendChild(div);
+  });
+  show('sfich');
 }
+
+// ══ INIT ══
+loadS();
+if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(()=>{});
 </script>
 </body>
 </html>
