@@ -1107,16 +1107,37 @@ const FICHES = [
   ]},
 ];
 
+// ══ NORMALISATION DES DONNÉES ══
+// ANAM_Q utilise profession/objectif/contexte/question/options/correct/explanation/tagTypes
+// On normalise vers prof/obj/ctx/q/opts/c/e/tagC + mod:'anam'
+const ANAM_THEMES = ['Anamnèse', 'Adaptation circuit', 'Pédagogie'];
+const ANAM_NORM = ANAM_Q.map(q => ({
+  ...q,
+  mod: 'anam',
+  theme: q.theme || ANAM_THEMES[(q.id - 1) % 3],
+  prof: q.prof || q.profession || '',
+  obj: q.obj || q.objectif || '',
+  ctx: q.ctx || q.contexte || '',
+  q: q.q || q.question || '',
+  opts: q.opts || q.options || [],
+  c: (q.c !== undefined) ? q.c : (q.correct !== undefined ? q.correct : 0),
+  e: q.e || q.explanation || '',
+  tagC: q.tagC || q.tagTypes || [],
+}));
+
+// UC_Q utilise uc:'uc1'/'uc4' — on ajoute mod pour homogénéité
+const UC_NORM = UC_Q.map(q => ({
+  ...q,
+  mod: q.mod || q.uc || 'uc1',
+}));
+
 // ══ STATE ══
 const G = {
   mod:'', sub:'all', pool:[], cur:0, score:0,
   hist:[], errors:[], answered:false
 };
 
-const ALL_Q = [
-  ...ANAM_Q.map(q=>({...q, mod:'anam'})),
-  ...UC_Q
-];
+const ALL_Q = [...ANAM_NORM, ...UC_NORM];
 
 function loadS() {
   try {
@@ -1222,17 +1243,16 @@ function buildPool() {
     const p = shuffle(ALL_Q.filter(q=>G.errors.includes(q.id)));
     if(!p.length){alert('Aucune erreur enregistrée !');return null;}
     return p;
-  }
-  const themeMap = {
+  }  const themeMap = {
     t_anam:'Anamnèse', t_adapt:'Adaptation circuit', t_peda:'Pédagogie',
     t_erp:'ERP', t_resp:'Responsabilité', t_sec:'Secourisme',
     t_swot:'Analyse & SWOT', t_strat:'Stratégie commerciale',
     t_digital:'Communication digitale', t_event:'Dossier événementiel',
   };
   let pool;
-  if(mod==='anam')       pool = [...ANAM_Q];
-  else if(mod==='uc1')   pool = UC_Q.filter(q=>q.uc==='uc1');
-  else if(mod==='uc4')   pool = UC_Q.filter(q=>q.uc==='uc4');
+  if(mod==='anam')       pool = [...ANAM_NORM];
+  else if(mod==='uc1')   pool = UC_NORM.filter(q=>q.uc==='uc1');
+  else if(mod==='uc4')   pool = UC_NORM.filter(q=>q.uc==='uc4');
   else                   pool = [...ALL_Q];
   if(sub !== 'all' && themeMap[sub]) pool = pool.filter(q=>q.theme===themeMap[sub]);
   return shuffle(pool);
