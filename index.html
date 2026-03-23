@@ -1056,7 +1056,7 @@ const FICHES = [
     ['Atelier 3','Push-up — Poussé · Pectoraux, deltoïdes ant., triceps'],
     ['Atelier 4','TRX Row — Tiré · Grand dorsal, rhomboïdes, biceps'],
     ['Atelier 5','Planche Dynamique — Gainage · Core global, épaules, fessiers'],
-    ['Script démo','1 min/atelier, cue verbal pendant l'exécution, buffer 35'''],
+    ['Script démo','1 min/atelier, cue verbal pendant l\'exécution, buffer 35\'\''],
   ]},
   {t:'Profils — Mémo rapide',ic:'🩺',rows:[
     ['Simone 63F','Cardio-vasculaire en priorité, push-up genoux, ton bienveillant'],
@@ -1089,7 +1089,7 @@ const FICHES = [
     ['PLS','Inconscient qui RESPIRE — NE PAS faire RCP'],
     ['RICE','Rest, Ice (15-20 min), Compression, Elevation'],
     ['Hypoglycémie','15g glucides rapides — appel 15 si perte de conscience'],
-    ['Claquage','Arrêt + RICE + médecin — JAMAIS d'étirement ni chaleur 48h'],
+    ['Claquage','Arrêt + RICE + médecin — JAMAIS d\'étirement ni chaleur 48h'],
   ]},
   {t:'Marketing & Communication',ic:'📊',rows:[
     ['SWOT','Forces/Faiblesses (internes) + Opportunités/Menaces (externes)'],
@@ -1267,7 +1267,7 @@ function startQ() {
 }
 
 function renderQ() {
-  const q=G.pool[G.cur]; q.q=q.q||q.question; q.opts=q.opts||q.options; q.c=q.c!==undefined?q.c:q.correct; q.e=q.e||q.explanation, n=G.pool.length;
+  const q=G.pool[G.cur], n=G.pool.length;
   document.getElementById('pf').style.width=(G.cur/n*100)+'%';
   document.getElementById('qn').textContent=`${G.cur+1}/${n}`;
   document.getElementById('sb').textContent=`${G.score}/${G.cur}`;
@@ -1278,16 +1278,16 @@ function renderQ() {
   let ch='';
   if(q.profil){
     const tc={blue:'pt-b',orange:'pt-o',green:'pt-g',red:'pt-r'};
-    const tags=(q.tags||[]).map((t,i)=>`<span class="pt ${tc[q.tagTypes?q.tagTypes[i]:'blue']}">${t}</span>`).join('');
+    const tags=(q.tags||[]).map((t,i)=>`<span class="pt ${tc[q.tagC?q.tagC[i]:'blue']}">${t}</span>`).join('');
     ch=`<div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem">
       <div class="pav">${q.profil.charAt(0)}</div>
       <div>
         <div style="font-weight:700;font-size:1rem">${q.profil} <span style="font-size:.7rem;color:var(--mu);font-weight:400">#${q.num||''}</span></div>
-        <div style="font-size:.7rem;color:var(--mu)">${q.sexe==='F'?'Femme':'Homme'} · ${q.age} ans · ${q.poids}kg / ${q.taille}cm · ${q.profession||''}</div>
+        <div style="font-size:.7rem;color:var(--mu)">${q.sexe==='F'?'Femme':'Homme'} · ${q.age} ans · ${q.poids}kg / ${q.taille}cm · ${q.prof||''}</div>
         <div class="ptags">${tags}</div>
       </div>
     </div>
-    <div class="ctx"><b>Objectif :</b> ${q.objectif||''}<br/><span style="color:var(--sm)">${q.contexte||''}</span></div>
+    <div class="ctx"><b>Objectif :</b> ${q.obj||''}<br/><span style="color:var(--sm)">${q.ctx||''}</span></div>
     <div style="border-top:1px solid var(--bd);padding-top:.75rem;margin-top:.75rem" class="qt">${q.q}</div>`;
   } else {
     ch=`<div class="qt">${q.q}</div>`;
@@ -1311,12 +1311,12 @@ function renderQ() {
 function ansQ(idx) {
   if(G.answered)return;
   G.answered=true;
-  const q=G.pool[G.cur]; q.q=q.q||q.question; q.opts=q.opts||q.options; q.c=q.c!==undefined?q.c:q.correct; q.e=q.e||q.explanation;
+  const q=G.pool[G.cur];
   document.querySelectorAll('.op').forEach(o=>o.disabled=true);
-  const ok=idx===q.correct;
+  const ok=idx===q.c;
   const ops=document.querySelectorAll('.op');
   if(ok){G.score++;ops[idx].classList.add('ok');G.errors=G.errors.filter(id=>id!==q.id);}
-  else{ops[idx].classList.add('ko');ops[q.correct].classList.add('rv');if(!G.errors.includes(q.id))G.errors.push(q.id);}
+  else{ops[idx].classList.add('ko');ops[q.c].classList.add('rv');if(!G.errors.includes(q.id))G.errors.push(q.id);}
   G.hist.push({q,sel:idx,ok});
   const ex=document.getElementById('expl');
   ex.innerHTML=`<strong>${ok?'✅ Correct !':'❌ Incorrect.'}</strong> ${q.e}`;
@@ -1359,7 +1359,7 @@ function showRes() {
     div.innerHTML=`<div class="rdom">${dom} — ${h.q.theme||''}</div>
     <div class="rq">${h.q.q}</div>
     <div class="rans ${h.ok?'ok':'ko'}">${h.ok?'✅':'❌'} ${L[h.sel]}. ${h.q.opts[h.sel]}</div>
-    ${!h.ok?`<div class="rcor">✅ ${L[h.q.c]}. ${h.q.opts[h.q.correct]}</div>`:''}`;
+    ${!h.ok?`<div class="rcor">✅ ${L[h.q.c]}. ${h.q.opts[h.q.c]}</div>`:''}`;
     rl.appendChild(div);
   });
   document.getElementById('sb').style.display='none';
